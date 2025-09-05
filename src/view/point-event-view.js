@@ -2,6 +2,14 @@ import {createElement} from '../render.js';
 import {humanizeTaskDueDate, getDurationTime} from '../utils.js';
 import {DateFormat} from '../const.js';
 
+const createOffersTemplate = (offers) => (
+  `<li class="event__offer">
+    <span class="event__offer-title">Order Uber</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">20</span>
+  </li>`
+)
+
 function createPointTemplate(point, destinations, offers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, type} = point;
 
@@ -14,6 +22,8 @@ function createPointTemplate(point, destinations, offers) {
 
   const currentDestination = destinations.find((element) => element.id === destination);
   const currentOffers = offers.find((offer) => offer.type === type);
+
+  const offersTemplate = createOffersTemplate(currentOffers);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -40,11 +50,7 @@ function createPointTemplate(point, destinations, offers) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-          </li>
+          ${offersTemplate}
         </ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
           <span class="visually-hidden">Add to favorite</span>
