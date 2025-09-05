@@ -16,6 +16,26 @@ export const generateDestinations = () => ({
     {
       src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
       description: 'Chamonix parliament building'
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      description: 'Chamonix parliament building'
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      description: 'Chamonix parliament building'
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      description: 'Chamonix parliament building'
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      description: 'Chamonix parliament building'
+    },
+    {
+      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      description: 'Chamonix parliament building'
     }
   ]
 });

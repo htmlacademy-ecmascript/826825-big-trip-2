@@ -1,24 +1,19 @@
 import {createElement} from '../render.js';
-import {humanizeTaskDueDate} from '../utils.js';
-import {DATE_DAY_FORMAT, DATE_PERIOD_FORMAT, DATE_DATA_PERIOD_FORMAT, DATE_DATA_DAY_FORMAT, DATE_DURATION_FORMAT} from '../const.js';
+import {humanizeTaskDueDate, getDurationTime} from '../utils.js';
+import {DateFormat} from '../const.js';
 
 function createPointTemplate(point, destinations, offers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, type} = point;
-  const day = humanizeTaskDueDate(dateFrom, DATE_DAY_FORMAT);
-  const dataDay = humanizeTaskDueDate(dateFrom, DATE_DATA_DAY_FORMAT);
-  const dateStart = humanizeTaskDueDate(dateFrom, DATE_PERIOD_FORMAT);
-  const dateDataStart = humanizeTaskDueDate(dateFrom, DATE_DATA_PERIOD_FORMAT);
-  const dateEnd = humanizeTaskDueDate(dateTo, DATE_PERIOD_FORMAT);
-  const dateDataEnd = humanizeTaskDueDate(dateTo, DATE_DATA_PERIOD_FORMAT);
+
+  const day = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DAY_FORMAT);
+  const dataDay = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_DAY_FORMAT);
+  const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_PERIOD_FORMAT);
+  const dateDataStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_PERIOD_FORMAT);
+  const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_PERIOD_FORMAT);
+  const dateDataEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_DATA_PERIOD_FORMAT);
 
   const currentDestination = destinations.find((element) => element.id === destination);
-  console.log(type);
-  console.log(offers);
-  console.log(destinations);
   const currentOffers = offers.find((offer) => offer.type === type);
-  console.log(currentOffers);
-
-  const foo = () => dateTo - dateFrom;
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -38,7 +33,7 @@ function createPointTemplate(point, destinations, offers) {
             &mdash;
             <time class="event__end-time" datetime="${dateDataEnd}">${dateEnd}</time>
           </p>
-          <p class="event__duration">${humanizeTaskDueDate(foo(), DATE_PERIOD_FORMAT)}</p>
+          <p class="event__duration">${getDurationTime(dateFrom, dateTo)}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
