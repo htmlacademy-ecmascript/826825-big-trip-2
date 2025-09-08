@@ -29,8 +29,6 @@ const getDurationTime = (dateFrom, dateTo) => {
   return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
 };
 
-
-
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }

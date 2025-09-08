@@ -2,17 +2,33 @@ import {createElement} from '../render.js';
 import {humanizeTaskDueDate, getDurationTime} from '../utils.js';
 import {DateFormat} from '../const.js';
 
-const createOffersTemplate = (offers) => (
-  `<li class="event__offer">
-    <span class="event__offer-title">Order Uber</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">20</span>
-  </li>`
-)
+function createOffersTemplate (offers) {
+
+  // ${Object.entries(repeating).map(([day, repeat]) => `<input
+  //       class="visually-hidden card__repeat-day-input"
+  //       type="checkbox"
+  //       id="repeat-${day}"
+  //       name="repeat"
+  //       value="${day}"
+  //       ${repeat ? 'checked' : ''}
+  //     />
+  //     <label class="card__repeat-day" for="repeat-${day}"
+  //       >${day}</label
+  //     >`).join('')}
+  // console.log(offers);
+  return offers.map((offer) => `<li
+    class="event__offer">
+      <span
+        class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </li>`).join('');
+
+}
 
 function createPointTemplate(point, destinations, offers) {
-  const {basePrice, dateFrom, dateTo, destination, isFavorite, type} = point;
-
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, type, currentOffers} = point;
+  console.log(currentOffers);
   const day = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DAY_FORMAT);
   const dataDay = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_DAY_FORMAT);
   const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_PERIOD_FORMAT);
@@ -21,9 +37,11 @@ function createPointTemplate(point, destinations, offers) {
   const dateDataEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_DATA_PERIOD_FORMAT);
 
   const currentDestination = destinations.find((element) => element.id === destination);
-  const currentOffers = offers.find((offer) => offer.type === type);
+  const currentOfferType = offers.find((offer) => offer.type === type);
 
-  const offersTemplate = createOffersTemplate(currentOffers);
+  const checkedOffers = currentOfferType.offers.map((offer) => currentOffers.includes(offer.id));
+  console.log(checkedOffers);
+  const offersTemplate = createOffersTemplate(checkedOffers);
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'

@@ -8,12 +8,13 @@ export const generateMockPoints = () => {
   const startDate = generateRandomDate(new Date(2025, 8, 1), new Date());
   const endDate = generateRandomDate(new Date(startDate), new Date());
   return ({
-  id: getPointId(),
-  basePrice: getRandomInteger(MIN_PRICE, MAX_PRICE),
-  dateFrom: startDate,
-  dateTo: endDate,
-  destination: getRandomInteger(1, DESTINATION_NAMES.length - 1),
-  isFavorite: getBooleanType(),
-  offers: getRandomNumbersArray(5, 5),
-  type: getRandomArrayElement(POINT_TYPES)
-})};
+    id: getPointId(),
+    basePrice: getRandomInteger(MIN_PRICE, MAX_PRICE),
+    dateFrom: startDate,
+    dateTo: endDate,
+    destination: getRandomInteger(1, DESTINATION_NAMES.length - 1),
+    isFavorite: getBooleanType(),
+    currentOffers: getRandomNumbersArray(5, 4),
+    type: getRandomArrayElement(POINT_TYPES)
+  });
+};
