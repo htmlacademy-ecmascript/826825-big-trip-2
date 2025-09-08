@@ -1,6 +1,27 @@
 import {createElement} from '../render.js';
 
-function createAddPointTemplate() {
+const BLANK_POINT = {
+  id: '',
+  basePrice: '',
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: ''
+};
+
+function createFotosTemplate(currentDestination) {
+  return currentDestination.pictures.map(({src, description}) => `<img
+    class="event__photo"
+    src="${src}"
+    alt="${description}">`).join('');
+}
+
+function createAddPointTemplate(point, destinations, offers) {
+  const {basePrice, dateFrom, dateTo, destination, isFavorite, type, offers: currentOffers} = point;
+  const currentDestination = destinations.find((element) => element.id === destination);
+  const fotosTemplate = createFotosTemplate(currentDestination);
   return (
     `<form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -152,11 +173,7 @@ function createAddPointTemplate() {
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
-              <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+              ${fotosTemplate}
             </div>
           </div>
         </section>
@@ -166,8 +183,15 @@ function createAddPointTemplate() {
 }
 
 export default class AddPointView {
+  constructor({point, destinations, offers}) {
+    this.point = point;
+    this.destinations = destinations;
+    this.offers = offers;
+  }
+
+
   getTemplate() {
-    return createAddPointTemplate();
+    return createAddPointTemplate(this.point, this.destinations, this.offers);
   }
 
   getElement() {

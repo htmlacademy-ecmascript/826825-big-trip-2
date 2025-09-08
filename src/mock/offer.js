@@ -109,12 +109,12 @@ const mockOffers = [
       },
       {
         id: '3',
-        title: 'smoke at car',
+        title: 'smoke at pool',
         price: 5000
       },
       {
         id: '4',
-        title: 'chat with a taxi driver about life',
+        title: 'drive a ship',
         price: 5000000
       },
     ]
@@ -124,7 +124,7 @@ const mockOffers = [
     offers: [
       {
         id: '0',
-        title: 'Upgrade to a business class',
+        title: 'drive ',
         price: 120
       },
       {
@@ -159,22 +159,22 @@ const mockOffers = [
       },
       {
         id: '1',
-        title: 'Upgrade to batmen Car',
+        title: 'fighter flight',
         price: 1200
       },
       {
         id: '2',
-        title: 'speed as flight',
+        title: 'whiskey without limit',
         price: 12000
       },
       {
         id: '3',
-        title: 'smoke at car',
+        title: 'make a loop',
         price: 5000
       },
       {
         id: '4',
-        title: 'chat with a taxi driver about life',
+        title: 'talk to the pilot about life',
         price: 5000000
       },
     ]
@@ -184,27 +184,27 @@ const mockOffers = [
     offers: [
       {
         id: '0',
-        title: 'Upgrade to a business class',
+        title: 'suite',
         price: 120
       },
       {
         id: '1',
-        title: 'Upgrade to batmen Car',
+        title: 'add a sauna',
         price: 1200
       },
       {
         id: '2',
-        title: 'speed as flight',
+        title: 'Parking space',
         price: 12000
       },
       {
         id: '3',
-        title: 'smoke at car',
+        title: 'shout from the balcony',
         price: 5000
       },
       {
         id: '4',
-        title: 'chat with a taxi driver about life',
+        title: 'break furniture',
         price: 5000000
       },
     ]
@@ -234,7 +234,7 @@ const mockOffers = [
       },
       {
         id: '4',
-        title: 'chat with a taxi driver about life',
+        title: 'Ask stupid questions',
         price: 5000000
       },
     ]

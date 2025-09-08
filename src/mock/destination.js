@@ -14,27 +14,23 @@ export const generateDestinations = () => ({
   name: getRandomArrayElement(DESTINATION_NAMES),
   pictures: [
     {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      src: `img/photos/1.jpg`,
       description: 'Chamonix parliament building'
     },
     {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      src: `img/photos/2.jpg`,
       description: 'Chamonix parliament building'
     },
     {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      src: `img/photos/3.jpg`,
       description: 'Chamonix parliament building'
     },
     {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      src: `img/photos/4.jpg`,
       description: 'Chamonix parliament building'
     },
     {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
-      description: 'Chamonix parliament building'
-    },
-    {
-      src: `https://loremflickr.com/248/152?random=${getRandomInteger(0 , 100)}`,
+      src: `img/photos/5.jpg`,
       description: 'Chamonix parliament building'
     }
   ]
