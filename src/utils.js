@@ -33,12 +33,6 @@ function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function getRandomNumbersArray (length, max) {
-  return [...new Array(Math.round(Math.random() * length))]
-    .map(() => Math.round(Math.random() * max));
-}
-
-
 function getBooleanType () {
   return Boolean(Math.round(Math.random()));
 }
@@ -68,7 +62,6 @@ export {
   getDurationTime,
   generateRandomDate,
   getRandomArrayElement,
-  getRandomNumbersArray,
   getBooleanType,
   getRandomUniqueInteger,
   getRandomInteger
