@@ -6,6 +6,7 @@ const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const POINT_COUNT = 5;
 
 const DateFormat = {
+  DATE_ADD_FORMAT: 'DD/MM/YY hh:mm',
   DATE_DAY_FORMAT: 'MMM DD',
   DATE_DATA_DAY_FORMAT: 'YYYY-MM-DD',
   DATE_PERIOD_FORMAT: 'hh:mm',

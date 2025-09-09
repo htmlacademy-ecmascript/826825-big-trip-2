@@ -1,4 +1,4 @@
-import {getRandomArrayElement, generateRandomDate, getBooleanType, getRandomNumbersArray, getRandomUniqueInteger, getRandomInteger} from '../utils.js';
+import {getRandomArrayElement, generateRandomDate, getBooleanType, getRandomUniqueInteger, getRandomInteger} from '../utils.js';
 import {POINT_TYPES, MAX_PRICE, DESTINATION_NAMES, POINT_COUNT, MIN_PRICE} from '../const.js';
 
 const getPointId = getRandomUniqueInteger(POINT_COUNT);

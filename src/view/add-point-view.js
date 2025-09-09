@@ -1,4 +1,6 @@
 import {createElement} from '../render.js';
+import {humanizeTaskDueDate} from '../utils.js';
+import {DateFormat} from '../const.js';
 
 const BLANK_POINT = {
   id: '',
@@ -12,7 +14,7 @@ const BLANK_POINT = {
 };
 
 function createOffersTemplate(offerByType, currentOffers) {
-  return offerByType.offers.map((offer) => `<div class="event__offer-selector">
+  return offerByType ? offerByType.offers.map((offer) => `<div class="event__offer-selector">
           <input
             class="event__offer-checkbox visually-hidden"
             id="event-offer-luggage-1"
@@ -24,14 +26,14 @@ function createOffersTemplate(offerByType, currentOffers) {
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
           </label>
-        </div>`).join('')
+        </div>`).join('') : '';
 }
 
 function createFotosTemplate(currentDestination) {
-  return currentDestination.pictures.map(({src, description}) => `<img
+  return currentDestination ? currentDestination.pictures.map(({src, description}) => `<img
     class="event__photo"
     src="${src}"
-    alt="${description}">`).join('');
+    alt="${description}">`).join('') : '';
 }
 
 function createEventsTemplate(offers) {
@@ -46,83 +48,91 @@ function createEventsTemplate(offers) {
   </div>`).join('');
 }
 
+function createDestinationsListTemplate(destinations) {
+  return destinations.map(({name}) => `<option value=${name}></option>`).join('');
+}
+
 function createAddPointTemplate(point, destinations, offers) {
   const {basePrice, dateFrom, dateTo, destination, type, offers: currentOffers} = point;
+  const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_ADD_FORMAT);
+  const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_ADD_FORMAT);
+
   const currentDestination = destinations.find((element) => element.id === destination);
   const offerByType = offers.find((offer) => offer.type === type);
 
   const eventsTemplate = createEventsTemplate(offers);
   const offersTemplate = createOffersTemplate(offerByType, currentOffers);
   const fotosTemplate = createFotosTemplate(currentDestination);
+  const destinationsListTemplate = createDestinationsListTemplate(destinations);
   return (
-    `<form class="event event--edit" action="#" method="post">
-      <header class="event__header">
-        <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
-          </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+    `<li class="trip-events__item">
+      <form class="event event--edit" action="#" method="post">
+        <header class="event__header">
+          <div class="event__type-wrapper">
+            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+              <span class="visually-hidden">Choose event type</span>
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            </label>
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-          <div class="event__type-list">
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Event type</legend>
-                ${eventsTemplate}
-            </fieldset>
-          </div>
-        </div>
-
-        <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            ${type}
-          </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${currentDestination.name} list="destination-list-1">
-          <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
-          </datalist>
-        </div>
-
-        <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom}">
-          &mdash;
-          <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo}">
-        </div>
-
-        <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
-            <span class="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
-        </div>
-
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
-      </header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-          <div class="event__available-offers">
-            ${offersTemplate}
-          </div>
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">${currentDestination.name}</h3>
-          <p class="event__destination-description">${currentDestination.description}</p>
-
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-              ${fotosTemplate}
+            <div class="event__type-list">
+              <fieldset class="event__type-group">
+                <legend class="visually-hidden">Event type</legend>
+                  ${eventsTemplate}
+              </fieldset>
             </div>
           </div>
+
+          <div class="event__field-group  event__field-group--destination">
+            <label class="event__label  event__type-output" for="event-destination-1">
+              ${type}
+            </label>
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination ? currentDestination.name : ''}" list="destination-list-1">
+            <datalist id="destination-list-1">
+              ${destinationsListTemplate}
+            </datalist>
+          </div>
+
+          <div class="event__field-group  event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-1">From</label>
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateStart}">
+            &mdash;
+            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEnd}">
+          </div>
+
+          <div class="event__field-group  event__field-group--price">
+            <label class="event__label" for="event-price-1">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+          </div>
+
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Cancel</button>
+        </header>
+        <section class="event__details">
+          <section class="event__section  event__section--offers">
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">
+              ${offersTemplate}
+            </div>
+          </section>
+
+          <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">${currentDestination ? currentDestination.name : ''}</h3>
+            <p class="event__destination-description">${currentDestination ? currentDestination.description : ''}</p>
+
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${fotosTemplate}
+              </div>
+            </div>
+          </section>
         </section>
-      </section>
-    </form>`
+      </form>
+    </li>`
   );
 }
 

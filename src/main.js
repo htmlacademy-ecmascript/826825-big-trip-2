@@ -16,7 +16,10 @@ const pointsModel = new PointsModel();
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
 
-const infoPresenter = new InfoPresenter({infoContainer: tripHeaderElement});
+const infoPresenter = new InfoPresenter({
+  infoContainer: tripHeaderElement
+});
+
 const boardPresenter = new BoardPresenter({
   boardContainer: mainContainer,
   pointsModel,
