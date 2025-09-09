@@ -14,7 +14,7 @@ export const generateMockPoints = () => {
     dateTo: endDate,
     destination: getRandomInteger(1, DESTINATION_NAMES.length - 1),
     isFavorite: getBooleanType(),
-    offers: ['0', '1', '3'],
+    offers: ['2', '4'],
     type: getRandomArrayElement(POINT_TYPES)
   });
 };
