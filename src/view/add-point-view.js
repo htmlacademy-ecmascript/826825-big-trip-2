@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js'
 import {humanizeTaskDueDate} from '../utils.js';
 import {DateFormat} from '../const.js';
 
@@ -136,27 +136,18 @@ function createAddPointTemplate(point, destinations, offers) {
   );
 }
 
-export default class AddPointView {
+export default class AddPointView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
   constructor({point = BLANK_POINT, destinations, offers}) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
-
-  getTemplate() {
-    return createAddPointTemplate(this.point, this.destinations, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createAddPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 }
