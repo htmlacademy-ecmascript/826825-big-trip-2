@@ -140,14 +140,25 @@ export default class AddPointView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
-  constructor({point = BLANK_POINT, destinations, offers}) {
+
+  #handleFormSubmit = null;
+
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createAddPointTemplate(this.#point, this.#destinations, this.#offers);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

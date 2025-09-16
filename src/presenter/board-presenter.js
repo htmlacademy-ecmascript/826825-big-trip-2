@@ -3,7 +3,8 @@ import TripListView from '../view/trip-list-view.js';
 import SortView from '../view/sort-view.js';
 import AddPointView from '../view/add-point-view';
 import PointEventView from '../view/point-event-view.js';
-import {render} from '../framework/render.js';
+import NoPointView from '../view/no-point-view.js';
+import {render, replace} from '../framework/render.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -27,6 +28,53 @@ export default class BoardPresenter {
     this.#boardPoints = [...this.#pointsModel.points];
     this.#boardDestinations = [...this.#destinationsModel.destinations];
     this.#boardOffers = [...this.#offersModel.offers];
+
+    this.#renderBoard();
+  }
+
+  #renderPoint(point, destinations, offers) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    const pointComponent = new PointEventView({
+      point,
+      destinations,
+      offers,
+      onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    const pointEditComponent = new AddPointView({
+      point,
+      destinations,
+      offers,
+      onFormSubmit: () => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    // const pointComponent = new PointEventView({point, destinations, offers});
+
+    function replacePointToForm() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceFormToPoint() {
+      replace(pointComponent, pointEditComponent);
+    }
+
+    render(pointComponent, this.#tripListComponent.element);
+  }
+
+  #renderBoard() {
     render(this.#boardComponent, this.#boardContainer);
     render(new SortView(), this.#boardComponent.element);
     render(this.#tripListComponent, this.#boardComponent.element);
@@ -34,11 +82,5 @@ export default class BoardPresenter {
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i], this.#boardDestinations, this.#boardOffers);
     }
-  }
-
-  #renderPoint(point, destinations, offers) {
-    const pointComponent = new PointEventView({point, destinations, offers});
-
-    render(pointComponent, this.#tripListComponent.element);
   }
 }
