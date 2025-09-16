@@ -3,9 +3,9 @@ import {DESTINATION_NAMES} from '../const.js';
 
 
 export default class DestinationsModel {
-  destinations = Array.from({length: DESTINATION_NAMES.length - 1}, generateDestinations);
+  #destinations = Array.from({length: DESTINATION_NAMES.length - 1}, generateDestinations);
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 }

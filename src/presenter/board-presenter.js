@@ -6,26 +6,39 @@ import PointEventView from '../view/point-event-view.js';
 import {render} from '../framework/render.js';
 
 export default class BoardPresenter {
-  boardComponent = new BoardView();
-  tripListComponent = new TripListView();
+  #boardContainer = null;
+  #pointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
+  #boardComponent = new BoardView();
+  #tripListComponent = new TripListView();
+  #boardPoints = [];
+  #boardDestinations = [];
+  #boardOffers = [];
 
   constructor({boardContainer, pointsModel, destinationsModel, offersModel}) {
-    this.boardContainer = boardContainer;
-    this.pointsModel = pointsModel;
-    this.destinationsModel = destinationsModel;
-    this.offersModel = offersModel;
+    this.#boardContainer = boardContainer;
+    this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init() {
-    this.boardPoints = [...this.pointsModel.getPoints()];
-    this.boardDestinations = [...this.destinationsModel.getDestinations()];
-    this.boardOffers = [...this.offersModel.getOffers()];
-    render(this.boardComponent, this.boardContainer);
-    render(new SortView(), this.boardComponent.element);
-    render(this.tripListComponent, this.boardComponent.element);
-    render(new AddPointView({point: this.boardPoints[0], destinations: this.boardDestinations, offers: this.boardOffers}), this.tripListComponent.element);
-    for (let i = 1; i < this.boardPoints.length; i++) {
-      render(new PointEventView({point: this.boardPoints[i], destinations: this.boardDestinations, offers: this.boardOffers}), this.tripListComponent.element);
+    this.#boardPoints = [...this.#pointsModel.points];
+    this.#boardDestinations = [...this.#destinationsModel.destinations];
+    this.#boardOffers = [...this.#offersModel.offers];
+    render(this.#boardComponent, this.#boardContainer);
+    render(new SortView(), this.#boardComponent.element);
+    render(this.#tripListComponent, this.#boardComponent.element);
+    // render(new AddPointView({point: this.#boardPoints[0], destinations: this.#boardDestinations, offers: this.#boardOffers}), this.#tripListComponent.element);
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      this.#renderPoint(this.#boardPoints[i], this.#boardDestinations, this.#boardOffers);
     }
+  }
+
+  #renderPoint(point, destinations, offers) {
+    const pointComponent = new PointEventView({point, destinations, offers});
+
+    render(pointComponent, this.#tripListComponent.element);
   }
 }
