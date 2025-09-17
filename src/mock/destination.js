@@ -1,10 +1,5 @@
-import {getRandomArrayElement, getRandomUniqueInteger} from '../utils.js';
+import {getRandomArrayElement, getRandomUniqueInteger} from '../utils/commons.js';
 import {DESCRIPTION, DESTINATION_NAMES} from '../const.js';
-
-const generateDescription = () => {
-  const descriptionTExts = Array.from(DESCRIPTION.split('. '));
-  return getRandomArrayElement(descriptionTExts);
-};
 
 const getDestinationId = getRandomUniqueInteger(DESTINATION_NAMES.length - 1);
 
@@ -13,7 +8,7 @@ export const generateDestinations = () => {
 
   return ({
     id: destinationsId,
-    description: generateDescription(),
+    description: getRandomArrayElement(DESCRIPTION),
     name: DESTINATION_NAMES[destinationsId - 1],
     pictures: [
       {

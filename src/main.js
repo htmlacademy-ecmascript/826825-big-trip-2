@@ -6,6 +6,7 @@ import InfoPresenter from './presenter/info-presenter.js';
 import PointsModel from './model/points-model.js';
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
+import {generateFilter} from './mock/filter.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripHeaderElement = siteHeaderElement.querySelector('.trip-main');
@@ -17,7 +18,10 @@ const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
 
 const infoPresenter = new InfoPresenter({
-  infoContainer: tripHeaderElement
+  infoContainer: tripHeaderElement,
+  pointsModel,
+  destinationsModel,
+  offersModel
 });
 
 const boardPresenter = new BoardPresenter({
@@ -27,8 +31,11 @@ const boardPresenter = new BoardPresenter({
   offersModel
 });
 
+const filters = generateFilter(pointsModel.points);
+
 infoPresenter.init();
-render(new FiltersView(), tripHeaderElement);
+
+render(new FiltersView({filters}), tripHeaderElement);
 render(new NewEventButtonView(), tripHeaderElement);
 
 boardPresenter.init();

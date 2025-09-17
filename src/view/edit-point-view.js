@@ -158,7 +158,7 @@ function createEditPointTemplate() {
   );
 }
 
-export default class EditPointView extends AbstractView {
+export default class EditPointView extends AbstractView {z
   get template() {
     return createEditPointTemplate();
   }

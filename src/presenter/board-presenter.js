@@ -83,6 +83,12 @@ export default class BoardPresenter {
 
   #renderBoard() {
     render(this.#boardComponent, this.#boardContainer);
+
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), this.#boardComponent.element);
+      return;
+    }
+
     render(new SortView(), this.#boardComponent.element);
     render(this.#tripListComponent, this.#boardComponent.element);
     // render(new AddPointView({point: this.#boardPoints[0], destinations: this.#boardDestinations, offers: this.#boardOffers}), this.#tripListComponent.element);

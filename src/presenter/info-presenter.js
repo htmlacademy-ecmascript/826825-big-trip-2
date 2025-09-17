@@ -5,15 +5,34 @@ import {render} from '../framework/render.js';
 
 
 export default class InfoPresenter {
-  infoComponent = new TripInfoView();
+  #infoContainer = null;
+  #pointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
+  #infoComponent = new TripInfoView();
 
-  constructor({infoContainer}) {
-    this.infoContainer = infoContainer;
+  #infoPoints = [];
+  #infoDestinations = [];
+  #infoOffers = [];
+
+  constructor({infoContainer, pointsModel, destinationsModel, offersModel}) {
+    this.#infoContainer = infoContainer;
+    this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init() {
-    render(this.infoComponent, this.infoContainer);
-    render(new TripInfoDestinationView(), this.infoComponent.element);
-    render(new TripInfoCostView(), this.infoComponent.element);
+    this.#infoPoints = [...this.#pointsModel.points];
+    this.#infoDestinations = [...this.#destinationsModel.destinations];
+    this.#infoOffers = [...this.#offersModel.offers];
+
+    render(this.#infoComponent, this.#infoContainer);
+    render(new TripInfoDestinationView({
+      points: this.#infoPoints, 
+      destinations: this.#infoDestinations}), this.#infoComponent.element);
+    render(new TripInfoCostView({
+      points: this.#infoPoints, 
+      offers: this.#infoOffers}), this.#infoComponent.element);
   }
 }
