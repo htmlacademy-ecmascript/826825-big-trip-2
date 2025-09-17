@@ -141,16 +141,19 @@ export default class AddPointView extends AbstractView {
   #destinations = null;
   #offers = null;
 
+  #handleCloseButtonClick = null;
   #handleFormSubmit = null;
 
-  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit}) {
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
 
+    this.#handleCloseButtonClick = onCloseButtonClick;
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeButtonClickHandler);
   }
 
   get template() {
@@ -160,5 +163,9 @@ export default class AddPointView extends AbstractView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit();
+  };
+
+  #closeButtonClickHandler = () => {
+    this.#handleCloseButtonClick();
   };
 }

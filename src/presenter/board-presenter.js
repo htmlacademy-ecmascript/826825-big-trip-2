@@ -56,8 +56,10 @@ export default class BoardPresenter {
       destinations,
       offers,
       onFormSubmit: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
+        closeEditForm();
+      },
+      onCloseButtonClick: () => {
+        closeEditForm();
       }
     });
 
@@ -69,6 +71,11 @@ export default class BoardPresenter {
 
     function replaceFormToPoint() {
       replace(pointComponent, pointEditComponent);
+    }
+
+    function closeEditForm() {
+      replaceFormToPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
     }
 
     render(pointComponent, this.#tripListComponent.element);
