@@ -12,7 +12,7 @@ const DESCRIPTION = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   'Sed sed nisi sed augue convallis suscipit in sed felis.',
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
   'In rutrum ac purus sit amet tempus.'];
-const POINT_COUNT = 3;
+const POINT_COUNT = 4;
 
 const DateFormat = {
   DATE_ADD_FORMAT: 'DD/MM/YY hh:mm',

@@ -2,8 +2,6 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat} from '../const.js';
 
-
-
 const createTitleTemplate = (points, destinations) => {
   if (points.length === 0) {
     return '';
@@ -11,14 +9,14 @@ const createTitleTemplate = (points, destinations) => {
 
   const destinationNames = points
     .map((point) => destinations
-    .find((element) => element.id === point.destination).name)
+      .find((element) => element.id === point.destination).name);
 
-    const uniqueDestinationNames = Array.from(new Set(destinationNames));
+  const uniqueDestinationNames = Array.from(new Set(destinationNames));
 
-    return uniqueDestinationNames.length <= 3 ? 
-      uniqueDestinationNames.join(' — ') :
-      `${uniqueDestinationNames[0]} — ... — ${uniqueDestinationNames[uniqueDestinationNames.length - 1]}`
-}
+  return uniqueDestinationNames.length <= 3 ?
+    uniqueDestinationNames.join(' — ') :
+    `${uniqueDestinationNames[0]} — ... — ${uniqueDestinationNames[uniqueDestinationNames.length - 1]}`;
+};
 
 const createDurationTemplate = (points) => {
   if (points.length === 0) {
@@ -31,7 +29,7 @@ const createDurationTemplate = (points) => {
   const endDate = humanizeTaskDueDate(sortedByTimePoints[sortedByTimePoints.length - 1].dateTo, DateFormat.DATE_TRIPS_FORMAT);
 
   return `${startDate} - ${endDate}`;
-}
+};
 
 function createTripInfoDestinationTemplate(points, destinations) {
 

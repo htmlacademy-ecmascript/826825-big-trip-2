@@ -29,17 +29,12 @@ const getDurationTime = (dateFrom, dateTo) => {
   return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
 };
 
-const isEventExpired = (dueDate) => {
-  return dayjs().isAfter(dueDate);
-}
+const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);
 
-const isEventToCome = (dueDate) => {
-  return dayjs().isBefore(dueDate);
-}
+const isEventToCome = (dueDate) => dayjs().isBefore(dueDate);
 
-const isEventPresent = (dateFrom, dateTo) => {
-  return dayjs().isAfter(dateFrom) && dayjs().isBefore(dateTo)
-}
+const isEventPresent = (dateFrom, dateTo) => dayjs()
+  .isAfter(dateFrom) && dayjs().isBefore(dateTo);
 
 export {
   humanizeTaskDueDate,

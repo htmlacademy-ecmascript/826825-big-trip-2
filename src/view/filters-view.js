@@ -4,19 +4,19 @@ function createFilterItemTemplate(filter, isChecked) {
   const {type, count} = filter;
   return (
     `<div class="trip-filters__filter">
-      <input 
-        id="filter-${type}" 
-        class="trip-filters__filter-input  
-        visually-hidden" 
-        type="radio" 
-        name="trip-filter" 
+      <input
+        id="filter-${type}"
+        class="trip-filters__filter-input
+        visually-hidden"
+        type="radio"
+        name="trip-filter"
         value=${type}
         ${isChecked ? 'checked' : ''}
         ${count === 0 ? 'disabled' : ''}
       >
-        
-      <label 
-        class="trip-filters__filter-label" 
+
+      <label
+        class="trip-filters__filter-label"
         for="filter-present">${type[0].toUpperCase() + type.slice(1)}
       </label>
     </div>`
@@ -25,7 +25,7 @@ function createFilterItemTemplate(filter, isChecked) {
 
 
 function createFilterTemplate(filterItems) {
-   const filterItemsTemplate = filterItems
+  const filterItemsTemplate = filterItems
     .map((filter, index) => createFilterItemTemplate(filter, index === 0))
     .join('');
 

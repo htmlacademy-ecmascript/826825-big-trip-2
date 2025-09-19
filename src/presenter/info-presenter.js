@@ -29,10 +29,10 @@ export default class InfoPresenter {
 
     render(this.#infoComponent, this.#infoContainer);
     render(new TripInfoDestinationView({
-      points: this.#infoPoints, 
+      points: this.#infoPoints,
       destinations: this.#infoDestinations}), this.#infoComponent.element);
     render(new TripInfoCostView({
-      points: this.#infoPoints, 
+      points: this.#infoPoints,
       offers: this.#infoOffers}), this.#infoComponent.element);
   }
 }

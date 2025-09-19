@@ -1,12 +1,8 @@
-const findOfferByType = (offers, offerType) => {
-    return offers.find((offer) => offer.type === offerType);
-}
+const findOfferByType = (offers, offerType) => offers.find((offer) => offer.type === offerType);
 
-const getSelectedOffers = (offerByType, point) => {
-    return offerByType.offers.filter((offer) => point.offers.includes(offer.id));
-}
+const getSelectedOffers = (offerByType, currentOffers) => offerByType.offers.filter((offer) => currentOffers.includes(offer.id));
 
 export {
-    findOfferByType,
-    getSelectedOffers
-}
+  findOfferByType,
+  getSelectedOffers
+};

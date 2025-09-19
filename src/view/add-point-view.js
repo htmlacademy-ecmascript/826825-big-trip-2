@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js'
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat} from '../const.js';
 
