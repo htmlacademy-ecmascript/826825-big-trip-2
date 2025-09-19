@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js'
 import {humanizeTaskDueDate, getDurationTime} from '../utils/date-utils.js';
+import {findOfferByType, getSelectedOffers} from '../utils/events-utils.js';
 import {DateFormat} from '../const.js';
 
 function createOffersTemplate (offers) {
@@ -24,9 +25,9 @@ function createPointTemplate(point, destinations, offers) {
   const dateDataEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_DATA_PERIOD_FORMAT);
 
   const currentDestination = destinations.find((element) => element.id === destination);
-  const offerByType = offers.find((offer) => offer.type === type);
+  const offerByType = findOfferByType(offers, type);
 
-  const selectedOffers = offerByType.offers.filter((offer) => currentOffers.includes(offer.id));
+  const selectedOffers = getSelectedOffers(offerByType, point);
   const offersTemplate = createOffersTemplate(selectedOffers);
 
   const favoriteClassName = isFavorite

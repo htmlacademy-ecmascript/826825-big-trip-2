@@ -1,14 +1,15 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import {findOfferByType, getSelectedOffers} from '../utils/events-utils.js';
 
 const createCostTemplate = (points, offers) => {
 
-  return points.reduce((total, point) => {
+  return points.reduce((totalSum, point) => {
 
-    const offerByType = offers.find((offer) => offer.type === point.type);
-    const selectedOffers = offerByType.offers.filter((offer) => point.offers.includes(offer.id));
+    const offerByType = findOfferByType(offers, point.type);
+    const selectedOffers = getSelectedOffers(offerByType, point);
     const offersCost = selectedOffers.reduce((sum, offer) => sum + offer.price, 0);
 
-    return total + point.basePrice + offersCost;
+    return totalSum + point.basePrice + offersCost;
   }, 0);
 };
 
