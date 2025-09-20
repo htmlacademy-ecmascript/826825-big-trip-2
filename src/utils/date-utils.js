@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {DateFormat} from './const.js';
+import {DateFormat} from '../const.js';
 
 dayjs.extend(duration);
 
@@ -29,40 +29,18 @@ const getDurationTime = (dateFrom, dateTo) => {
   return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
 };
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);
 
-function getBooleanType () {
-  return Boolean(Math.round(Math.random()));
-}
+const isEventToCome = (dueDate) => dayjs().isBefore(dueDate);
 
-function getRandomInteger (a, b) {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-}
-
-const getRandomUniqueInteger = (maxNumber) => {
-  const numbers = [];
-  const getUniqueNumber = () => {
-    const uniqueNumber = getRandomInteger(1, maxNumber);
-    if (numbers.includes(uniqueNumber)) {
-      return getUniqueNumber();
-    }
-    numbers.push(uniqueNumber);
-    return uniqueNumber;
-  };
-  return getUniqueNumber;
-};
+const isEventPresent = (dateFrom, dateTo) => dayjs()
+  .isAfter(dateFrom) && dayjs().isBefore(dateTo);
 
 export {
   humanizeTaskDueDate,
   getDurationTime,
   generateRandomDate,
-  getRandomArrayElement,
-  getBooleanType,
-  getRandomUniqueInteger,
-  getRandomInteger
+  isEventExpired,
+  isEventToCome,
+  isEventPresent
 };

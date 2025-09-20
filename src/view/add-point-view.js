@@ -1,5 +1,5 @@
-import {createElement} from '../render.js';
-import {humanizeTaskDueDate} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat} from '../const.js';
 
 const BLANK_POINT = {
@@ -38,13 +38,13 @@ function createFotosTemplate(currentDestination) {
 
 function createEventsTemplate(offers) {
   return offers.map(({type}) => `<div class="event__type-item">
-    <input id="event-type-${type}-1"
+    <input id="event-type-${type.toLowerCase()}-1"
       class="event__type-input visually-hidden"
       type="radio"
       name="event-type"
-      value=${type}>
-    <label class="event__type-label  event__type-label--${type}"
-      for="event-type-${type}-1">${type}</label>
+      value=${type.toLowerCase()}>
+    <label class="event__type-label  event__type-label--${type.toLowerCase()}"
+      for="event-type-${type.toLowerCase()}-1">${type}</label>
   </div>`).join('');
 }
 
@@ -71,7 +71,7 @@ function createAddPointTemplate(point, destinations, offers) {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -136,27 +136,36 @@ function createAddPointTemplate(point, destinations, offers) {
   );
 }
 
-export default class AddPointView {
-  constructor({point = BLANK_POINT, destinations, offers}) {
-    this.point = point;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class AddPointView extends AbstractView {
+  #point = null;
+  #destinations = null;
+  #offers = null;
+
+  #handleCloseButtonClick = null;
+  #handleFormSubmit = null;
+
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick}) {
+    super();
+    this.#point = point;
+    this.#destinations = destinations;
+    this.#offers = offers;
+
+    this.#handleCloseButtonClick = onCloseButtonClick;
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeButtonClickHandler);
   }
 
-
-  getTemplate() {
-    return createAddPointTemplate(this.point, this.destinations, this.offers);
+  get template() {
+    return createAddPointTemplate(this.#point, this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #closeButtonClickHandler = () => {
+    this.#handleCloseButtonClick();
+  };
 }
