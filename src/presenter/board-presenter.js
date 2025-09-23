@@ -63,8 +63,6 @@ export default class BoardPresenter {
       }
     });
 
-    // const pointComponent = new PointEventView({point, destinations, offers});
-
     function replacePointToForm() {
       replace(pointEditComponent, pointComponent);
     }
@@ -91,7 +89,6 @@ export default class BoardPresenter {
 
     render(new SortView(), this.#boardComponent.element);
     render(this.#tripListComponent, this.#boardComponent.element);
-    // render(new AddPointView({point: this.#boardPoints[0], destinations: this.#boardDestinations, offers: this.#boardOffers}), this.#tripListComponent.element);
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i], this.#boardDestinations, this.#boardOffers);
     }

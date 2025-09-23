@@ -3,7 +3,6 @@ import TripInfoCostView from '../view/trip-info-cost-view.js';
 import TripInfoDestinationView from '../view/trip-info-destination-view.js';
 import {render} from '../framework/render.js';
 
-
 export default class InfoPresenter {
   #infoContainer = null;
   #pointsModel = null;

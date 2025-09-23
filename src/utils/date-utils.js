@@ -12,7 +12,7 @@ function generateRandomDate(from, to) {
   return new Date(
     from.getTime() +
       Math.random() * (to.getTime() - from.getTime()),
-  );
+  ).getTime() + 1;
 }
 
 const getDurationTime = (dateFrom, dateTo) => {
