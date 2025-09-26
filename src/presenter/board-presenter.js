@@ -1,4 +1,4 @@
-import {render, RenderPosition, remove} from '../framework/render.js';
+import {render, RenderPosition} from '../framework/render.js';
 import {updateItem} from '../utils/commons.js';
 import {sortPointsByPrice, sortPointsByDay, sortPointsByTime} from '../utils/events-utils.js';
 import {SortType} from '../const.js';
