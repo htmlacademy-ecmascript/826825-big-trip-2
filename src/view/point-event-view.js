@@ -23,7 +23,6 @@ function createPointTemplate(point, destinations, offers) {
   const dateDataStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_PERIOD_FORMAT);
   const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_PERIOD_FORMAT);
   const dateDataEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_DATA_PERIOD_FORMAT);
-
   const currentDestination = destinations.find((element) => element.id === destination);
   const offerByType = findOfferByType(offers, type);
 
@@ -75,21 +74,29 @@ export default class PointEventView extends AbstractView {
   #point = null;
   #destinations = null;
   #offers = null;
+  #handleFavoriteClick = null;
 
   #handleEditClick = null;
-  constructor({point, destinations, offers, onEditClick}) {
+  constructor({point, destinations, offers, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
 
+    this.#handleFavoriteClick = onFavoriteClick;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
     return createPointTemplate(this.#point, this.#destinations, this.#offers);
   }
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
+  };
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
