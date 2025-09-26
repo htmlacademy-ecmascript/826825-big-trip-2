@@ -1,6 +1,6 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
 import {updateItem} from '../utils/commons.js';
-import {sortPointsByPrice} from '../utils/events-utils.js';
+import {sortPointsByPrice, sortPointsByDay, sortPointsByTime} from '../utils/events-utils.js';
 import {SortType} from '../const.js';
 import BoardView from '../view/bord-view.js';
 import TripListView from '../view/trip-list-view.js';
@@ -16,7 +16,6 @@ export default class BoardPresenter {
   #boardComponent = new BoardView();
   #tripListComponent = new TripListView();
   #noPointComponent = new NoPointView();
-  // #sortComponent = new SortView();
   #sortComponent = null;
   #pointPresenters = new Map();
   #boardPoints = [];
@@ -34,11 +33,11 @@ export default class BoardPresenter {
   }
 
   init() {
-    this.#boardPoints = [...this.#pointsModel.points];
+    this.#boardPoints = [...this.#pointsModel.points].sort(sortPointsByDay);
     this.#boardDestinations = [...this.#destinationsModel.destinations];
     this.#boardOffers = [...this.#offersModel.offers];
 
-    this.#sourcedBoardPoints = [...this.#pointsModel.points];
+    this.#sourcedBoardPoints = [...this.#boardPoints];
 
     this.#renderBoard();
   }
@@ -53,9 +52,6 @@ export default class BoardPresenter {
 
     this.#renderSort();
     this.#renderPointsList();
-    // render(this.#tripListComponent, this.#boardComponent.element);
-    // this.#boardPoints.forEach((point) =>
-    //   this.#renderPoint(point));
   }
 
   #renderPointsList() {
@@ -65,19 +61,14 @@ export default class BoardPresenter {
   }
 
   #sortPoints(sortType) {
-    // 2. Этот исходный массив задач необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
     switch (sortType) {
       case SortType.PRICE:
         this.#boardPoints.sort(sortPointsByPrice);
         break;
-      // case SortType.DATE_DOWN:
-      //   this.#boardTasks.sort(sortTaskDown);
-      //   break;
+      case SortType.TIME:
+        this.#boardPoints.sort(sortPointsByTime);
+        break;
       default:
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
         this.#boardPoints = [...this.#sourcedBoardPoints];
     }
 
@@ -90,9 +81,6 @@ export default class BoardPresenter {
     }
 
     this.#sortPoints(sortType);
-    // - Сортируем задачи
-    // - Очищаем список
-    // - Рендерим список заново
     this.#clearPointsList();
     this.#renderPointsList();
   };

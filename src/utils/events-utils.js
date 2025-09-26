@@ -1,10 +1,11 @@
-// import dayjs from 'dayjs';
+// import {getDurationTime} from './date-utils.js'; 
+import dayjs from 'dayjs';
 
 const findOfferByType = (offers, offerType) => offers.find((offer) => offer.type === offerType);
 
 const getSelectedOffers = (offerByType, currentOffers) => offerByType.offers.filter((offer) => currentOffers.includes(offer.id));
 
-function getWeightForNullData(dataA, dataB) {
+const getWeightForNullData = (dataA, dataB) => {
   if (dataA === null && dataB === null) {
     return 0;
   }
@@ -20,14 +21,31 @@ function getWeightForNullData(dataA, dataB) {
   return null;
 }
 
-// function sortTaskUp(taskA, taskB) {
-//   const weight = getWeightForNullDate(taskA.dueDate, taskB.dueDate);
-//   return weight ?? dayjs(taskA.dueDate).diff(dayjs(taskB.dueDate));
+const sortPointsByDay = (pointA, pointB) => {
+  const weight = getWeightForNullData(pointA.dateFrom, pointB.dateFrom);
+  return weight ?? pointA.dateFrom - pointB.dateFrom;
+}
+
+// const sortPointsByTime = (a, b) => dayjs(b.dateTo).diff(dayjs(b.dateFrom)) - dayjs(a.dateTo).diff(dayjs(a.dateFrom));
+
+// const sortPointsByTime = (pointA, pointB) => {
+//   const durationPointA = getDurationTime(pointA.dateFrom, pointA.dateTo);
+//   console.log(durationPointA);
+//   const durationPointB = getDurationTime(pointB.dateFrom, pointB.dateTo);
+//   console.log(durationPointB);
+//   const weight = getWeightForNullData(durationPointA, durationPointB);
+//   return weight ?? durationPointA - durationPointB;
 // }
 
-function sortPointsByPrice(pointA, pointB) {
+function sortPointsByTime(pointA, pointB) {
+  console.log(pointA)
+  console.log(pointB)
+  return (new Date(pointB.dateTo) - new Date(pointB.dateFrom)) - (new Date(pointA.dateTo) - new Date(pointA.dateFrom));
+}
+
+const sortPointsByPrice = (pointA, pointB) => {
   const weight = getWeightForNullData(pointA.basePrice, pointB.basePrice);
-  return weight;
+  return weight ?? (pointB.basePrice - pointA.basePrice);
 }
 
 // const sortPointsByPrice = (pionts) => pionts.sort((a, b) => a.basePrice - b.basePrice);
@@ -35,5 +53,7 @@ function sortPointsByPrice(pointA, pointB) {
 export {
   findOfferByType,
   getSelectedOffers,
-  sortPointsByPrice
+  sortPointsByPrice,
+  sortPointsByDay,
+  sortPointsByTime
 };
