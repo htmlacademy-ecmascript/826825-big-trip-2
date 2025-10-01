@@ -26,7 +26,11 @@ const getDurationTime = (dateFrom, dateTo) => {
   if (durationObject.asDays() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
-  return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
+  if (durationObject.asMonths() < 1) {
+    return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
+  }
+  //добавлен на время использования тестовых данныхж
+  return durationObject.format(DateFormat.DATE_DURATION_MONTH_FORMAT);
 };
 
 const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);

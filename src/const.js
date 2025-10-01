@@ -23,7 +23,8 @@ const DateFormat = {
   DATE_DATA_PERIOD_FORMAT: 'YYYY-ММ-DDThh:mm',
   DATE_DURATION_MINUTE_FORMAT: 'mm[M]',
   DATE_DURATION_HOUR_FORMAT: 'HH[H] mm[M]',
-  DATE_DURATION_DAY_FORMAT: 'DD[D] HH[H] mm[M]'
+  DATE_DURATION_DAY_FORMAT: 'DD[D] HH[H] mm[M]',
+  DATE_DURATION_MONTH_FORMAT: 'MM[M] DD[D] HH[H] mm[M]'
 };
 
 
@@ -32,6 +33,12 @@ const FilterType = {
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
+};
+
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
 };
 
 
@@ -43,5 +50,6 @@ export {
   DESTINATION_NAMES,
   POINT_COUNT,
   DateFormat,
-  FilterType
+  FilterType,
+  SortType
 };

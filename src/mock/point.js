@@ -6,8 +6,8 @@ const getPointId = getRandomUniqueInteger(POINT_COUNT);
 
 
 export const generateMockPoints = () => {
-  const startDate = generateRandomDate(new Date(2025, 10, 8, 14, 30), new Date(2025, 10, 10));
-  const endDate = generateRandomDate(new Date(startDate), new Date(2025, 10, 31));
+  const startDate = generateRandomDate(new Date(2025, 6, 6), new Date(2025, 10, 10));
+  const endDate = generateRandomDate(new Date(startDate), new Date(2025, 12, 31));
   return ({
     id: getPointId(),
     basePrice: getRandomInteger(MIN_PRICE, MAX_PRICE),

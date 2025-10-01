@@ -17,11 +17,11 @@ function createOffersTemplate(offerByType, currentOffers) {
   return offerByType ? offerByType.offers.map((offer) => `<div class="event__offer-selector">
           <input
             class="event__offer-checkbox visually-hidden"
-            id="event-offer-luggage-1"
+            id="event-offer-${offer.title.split(' ')[0]}-1"
             type="checkbox"
-            name="event-offer-luggage"
+            name="event-offer-${offer.title.split(' ')[0]}"
             ${currentOffers.includes(offer.id) ? 'checked' : ''}>
-          <label class="event__offer-label" for="event-offer-luggage-1">
+          <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-1">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
@@ -162,7 +162,7 @@ export default class AddPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
   #closeButtonClickHandler = () => {
