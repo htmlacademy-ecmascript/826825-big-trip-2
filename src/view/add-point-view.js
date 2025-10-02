@@ -17,11 +17,12 @@ function createOffersTemplate(offerByType, currentOffers) {
   return offerByType ? offerByType.offers.map((offer) => `<div class="event__offer-selector">
           <input
             class="event__offer-checkbox visually-hidden"
-            id="event-offer-${offer.title.split(' ')[0]}-1"
+            id="event-offer-${offer.title.split(' ')[0]}-${offer.id}"
             type="checkbox"
             name="event-offer-${offer.title.split(' ')[0]}"
+            data-offer-id="${offer.id}"
             ${currentOffers.includes(offer.id) ? 'checked' : ''}>
-          <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-1">
+          <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-${offer.id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offer.price}</span>
@@ -42,6 +43,7 @@ function createEventsTemplate(offers) {
       class="event__type-input visually-hidden"
       type="radio"
       name="event-type"
+      data-value="${type}"
       value=${type.toLowerCase()}
       >
     <label class="event__type-label  event__type-label--${type.toLowerCase()}"
@@ -138,7 +140,6 @@ function createAddPointTemplate(point, destinations, offers) {
 }
 
 export default class AddPointView extends AbstractStatefulView {
-  // #point = null;
   #destinations = null;
   #offers = null;
 
@@ -157,36 +158,61 @@ export default class AddPointView extends AbstractStatefulView {
     this.#handleFormSubmit = onFormSubmit;
   }
 
+  get template() {
+    return createAddPointTemplate(this._state, this.#destinations, this.#offers);
+  }
+
+  reset(point) {
+    this.updateElement(
+      AddPointView.parsePointToState(point),
+    );
+  }
+
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeButtonClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
     this.element.querySelector('.event__input').addEventListener('change', this.#destinationChangeHandler);
-  }
-
-  get template() {
-    return createAddPointTemplate(this._state, this.#destinations, this.#offers);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerCurrentHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
   }
 
   #eventTypeToggleHandler = (evt) => {
-    if (evt.target.tagName !== 'LABEL') {
+    const target = evt.target.closest('.event__type-item')
+    
+    if (!target) {
       return;
     }
 
     evt.preventDefault();
     this.updateElement({
-      type: evt.target.textContent,
+      type: target.querySelector('input').dataset.value,
       offers: [],
+    });
+  };
+
+  #offerCurrentHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      offers: [...evt.currentTarget.querySelectorAll('.event__offer-checkbox:checked')].map((item) => item.dataset.offerId),
     });
   };
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const updatedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+    const curentDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
     this.updateElement({
-      destination: updatedDestination.id,
+      destination: curentDestination.id,
     });
   };
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      basePrice: parseInt(evt.target.value,10),
+    });
+    console.log(this._state);
+  }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
@@ -204,35 +230,4 @@ export default class AddPointView extends AbstractStatefulView {
   static parseStateToPoint(state) {
     return {...state};
   }
-
-  // static parsePointToState(point) {
-  //   return {...point,
-  //     type: point.type !== '',
-  //     offers: isTaskRepeating(task.repeating),
-  //   };
-  // }
-
-  // static parseStateToPoint(state) {
-  //   const task = {...state};
-  //   if (!task.isDueDate) {
-  //     task.dueDate = null;
-  //   }
-
-  //   if (!task.isRepeating) {
-
-  //     task.repeating = {
-  //       mo: false,
-  //       tu: false,
-  //       we: false,
-  //       th: false,
-  //       fr: false,
-  //       sa: false,
-  //       su: false,
-  //     };
-  //   }
-
-  //   delete task.isDueDate;
-  //   delete task.isRepeating;
-  //   return task;
-  // }
 }
