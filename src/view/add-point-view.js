@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat} from '../const.js';
 
@@ -10,7 +10,7 @@ const BLANK_POINT = {
   destination: '',
   isFavorite: false,
   offers: [],
-  type: ''
+  type: 'Flight'
 };
 
 function createOffersTemplate(offerByType, currentOffers) {
@@ -42,7 +42,8 @@ function createEventsTemplate(offers) {
       class="event__type-input visually-hidden"
       type="radio"
       name="event-type"
-      value=${type.toLowerCase()}>
+      value=${type.toLowerCase()}
+      >
     <label class="event__type-label  event__type-label--${type.toLowerCase()}"
       for="event-type-${type.toLowerCase()}-1">${type}</label>
   </div>`).join('');
@@ -136,8 +137,8 @@ function createAddPointTemplate(point, destinations, offers) {
   );
 }
 
-export default class AddPointView extends AbstractView {
-  #point = null;
+export default class AddPointView extends AbstractStatefulView {
+  // #point = null;
   #destinations = null;
   #offers = null;
 
@@ -146,26 +147,92 @@ export default class AddPointView extends AbstractView {
 
   constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick}) {
     super();
-    this.#point = point;
+    this._setState(AddPointView.parsePointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
 
+    this._restoreHandlers();
+
     this.#handleCloseButtonClick = onCloseButtonClick;
     this.#handleFormSubmit = onFormSubmit;
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeButtonClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__input').addEventListener('change', this.#destinationChangeHandler);
   }
 
   get template() {
-    return createAddPointTemplate(this.#point, this.#destinations, this.#offers);
+    return createAddPointTemplate(this._state, this.#destinations, this.#offers);
   }
+
+  #eventTypeToggleHandler = (evt) => {
+    if (evt.target.tagName !== 'LABEL') {
+      return;
+    }
+
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.textContent,
+      offers: [],
+    });
+  };
+
+  #destinationChangeHandler = (evt) => {
+    evt.preventDefault();
+    const updatedDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
+    this.updateElement({
+      destination: updatedDestination.id,
+    });
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(AddPointView.parseStateToPoint(this._state));
   };
 
   #closeButtonClickHandler = () => {
     this.#handleCloseButtonClick();
   };
+
+  static parsePointToState(point) {
+    return {...point};
+  }
+
+  static parseStateToPoint(state) {
+    return {...state};
+  }
+
+  // static parsePointToState(point) {
+  //   return {...point,
+  //     type: point.type !== '',
+  //     offers: isTaskRepeating(task.repeating),
+  //   };
+  // }
+
+  // static parseStateToPoint(state) {
+  //   const task = {...state};
+  //   if (!task.isDueDate) {
+  //     task.dueDate = null;
+  //   }
+
+  //   if (!task.isRepeating) {
+
+  //     task.repeating = {
+  //       mo: false,
+  //       tu: false,
+  //       we: false,
+  //       th: false,
+  //       fr: false,
+  //       sa: false,
+  //       su: false,
+  //     };
+  //   }
+
+  //   delete task.isDueDate;
+  //   delete task.isRepeating;
+  //   return task;
+  // }
 }
