@@ -1,4 +1,4 @@
-import {getRandomArrayElement, getRandomUniqueInteger} from '../utils/commons.js';
+import {getRandomArrayElement, getRandomUniqueInteger, getRandomInteger} from '../utils/commons.js';
 import {DESCRIPTION, DESTINATION_NAMES} from '../const.js';
 
 const getDestinationId = getRandomUniqueInteger(DESTINATION_NAMES.length - 1);
@@ -12,23 +12,23 @@ export const generateDestinations = () => {
     name: DESTINATION_NAMES[destinationsId - 1],
     pictures: [
       {
-        src: 'img/photos/1.jpg',
+        src: `https://api.dicebear.com/9.x/bottts/svg?seed=${getRandomInteger(1, 100)}`,
         description: 'Chamonix parliament building'
       },
       {
-        src: 'img/photos/2.jpg',
+        src: `https://api.dicebear.com/9.x/bottts/svg?seed=${getRandomInteger(1, 100)}`,
         description: 'Chamonix parliament building'
       },
       {
-        src: 'img/photos/3.jpg',
+        src: `https://api.dicebear.com/9.x/bottts/svg?seed=${getRandomInteger(1, 100)}`,
         description: 'Chamonix parliament building'
       },
       {
-        src: 'img/photos/4.jpg',
+        src: `https://api.dicebear.com/9.x/bottts/svg?seed=${getRandomInteger(1, 100)}`,
         description: 'Chamonix parliament building'
       },
       {
-        src: 'img/photos/5.jpg',
+        src: `https://api.dicebear.com/9.x/bottts/svg?seed=${getRandomInteger(1, 100)}`,
         description: 'Chamonix parliament building'
       }
     ]
