@@ -23,7 +23,6 @@ export default class BoardPresenter {
   #boardOffers = [];
 
   #currentSortType = SortType.DAY;
-  #sourcedBoardPoints = [];
 
   constructor({boardContainer, pointsModel, destinationsModel, offersModel}) {
     this.#boardContainer = boardContainer;
@@ -36,8 +35,6 @@ export default class BoardPresenter {
     this.#boardPoints = [...this.#pointsModel.points].sort(sortPointsByDay);
     this.#boardDestinations = [...this.#destinationsModel.destinations];
     this.#boardOffers = [...this.#offersModel.offers];
-
-    this.#sourcedBoardPoints = [...this.#boardPoints];
 
     this.#renderBoard();
   }
@@ -60,6 +57,15 @@ export default class BoardPresenter {
       this.#renderPoint(point));
   }
 
+  #renderSort() {
+
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
+    render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
   #sortPoints(sortType) {
     switch (sortType) {
       case SortType.PRICE:
@@ -68,8 +74,9 @@ export default class BoardPresenter {
       case SortType.TIME:
         this.#boardPoints.sort(sortPointsByTime);
         break;
-      default:
-        this.#boardPoints = [...this.#sourcedBoardPoints];
+      case SortType.DAY:
+        this.#boardPoints.sort(sortPointsByDay);
+        break;
     }
 
     this.#currentSortType = sortType;
@@ -85,14 +92,6 @@ export default class BoardPresenter {
     this.#renderPointsList();
   };
 
-  #renderSort() {
-
-    this.#sortComponent = new SortView({
-      onSortTypeChange: this.#handleSortTypeChange
-    });
-
-    render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
-  }
 
   #renderNoPoints() {
     render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
@@ -117,7 +116,6 @@ export default class BoardPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 

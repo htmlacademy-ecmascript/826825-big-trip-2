@@ -215,12 +215,12 @@ export default class AddPointView extends AbstractStatefulView {
       this.#datepickerStart = flatpickr(
         this.element.querySelector('#event-start-time-1'),
         {
-          maxDate: new Date(this._state.dateTo),
+          // maxDate: new Date(this._state.dateTo),
           dateFormat: 'd/m/y H:i',
           enableTime: true,
           'time_24hr': true,
           defaultDate: this._state.dateFrom,
-          onChange: this.#dateFromChangeHandler, 
+          onChange: this.#dateFromChangeHandler,
         },
       );
     }
@@ -236,15 +236,15 @@ export default class AddPointView extends AbstractStatefulView {
           enableTime: true,
           'time_24hr': true,
           defaultDate: this._state.dateTo,
-          onChange: this.#dateToChangeHandler, 
+          onChange: this.#dateToChangeHandler,
         },
       );
     }
   }
 
   #eventTypeToggleHandler = (evt) => {
-    const target = evt.target.closest('.event__type-item')
-    
+    const target = evt.target.closest('.event__type-item');
+
     if (!target) {
       return;
     }
@@ -278,8 +278,7 @@ export default class AddPointView extends AbstractStatefulView {
     this.updateElement({
       basePrice: parseInt(evt.target.value,10),
     });
-    console.log(this._state);
-  }
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
