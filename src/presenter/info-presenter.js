@@ -19,6 +19,8 @@ export default class InfoPresenter {
     this.#pointsModel = pointsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
+
+    // this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
@@ -34,4 +36,6 @@ export default class InfoPresenter {
       points: this.#infoPoints,
       offers: this.#infoOffers}), this.#infoComponent.element);
   }
+
+  
 }

@@ -16,27 +16,58 @@ const BLANK_POINT = {
 };
 
 function createOffersTemplate(offerByType, currentOffers) {
-  return offerByType ? offerByType.offers.map((offer) => `<div class="event__offer-selector">
-          <input
-            class="event__offer-checkbox visually-hidden"
-            id="event-offer-${offer.title.split(' ')[0]}-${offer.id}"
-            type="checkbox"
-            name="event-offer-${offer.title.split(' ')[0]}"
-            data-offer-id="${offer.id}"
-            ${currentOffers.includes(offer.id) ? 'checked' : ''}>
-          <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-${offer.id}">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.price}</span>
-          </label>
-        </div>`).join('') : '';
+  if (offerByType.length === 0 ) {
+    return '';
+  }
+
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${offerByType.offers.map((offer) => 
+            `<div class="event__offer-selector">
+              <input
+                class="event__offer-checkbox visually-hidden"
+                id="event-offer-${offer.title.split(' ')[0]}-${offer.id}"
+                type="checkbox"
+                name="event-offer-${offer.title.split(' ')[0]}"
+                data-offer-id="${offer.id}"
+                ${currentOffers.includes(offer.id) ? 'checked' : ''}>
+              <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-${offer.id}">
+                <span class="event__offer-title">${offer.title}</span>
+                &plus;&euro;&nbsp;
+                <span class="event__offer-price">${offer.price}</span>
+              </label>
+            </div>`).join('')
+            }
+        </div>
+    </section>`
+  )
 }
 
-function createFotosTemplate(currentDestination) {
-  return currentDestination ? currentDestination.pictures.map(({src, description}) => `<img
+function createDescriptionTemplate({name, description, pictures}) {
+  if (!description) {
+    return '';
+  }
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">${name}</h3>
+      <p class="event__destination-description">${description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${createFotosTemplate(pictures)}
+        </div>
+      </div>
+    </section>`
+  )
+}
+
+function createFotosTemplate(pictures) {
+  return pictures.map(({src, description}) => `<img
     class="event__photo"
     src="${src}"
-    alt="${description}">`).join('') : '';
+    alt="${description}">`).join('');
 }
 
 function createEventsTemplate(offers) {
@@ -58,6 +89,7 @@ function createDestinationsListTemplate(destinations) {
 }
 
 function createAddPointTemplate(point, destinations, offers) {
+
   const {basePrice, dateFrom, dateTo, destination, type, offers: currentOffers} = point;
   const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_ADD_FORMAT);
   const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_ADD_FORMAT);
@@ -67,7 +99,7 @@ function createAddPointTemplate(point, destinations, offers) {
 
   const eventsTemplate = createEventsTemplate(offers);
   const offersTemplate = createOffersTemplate(offerByType, currentOffers);
-  const fotosTemplate = createFotosTemplate(currentDestination);
+  const descriptionTemplate = createDescriptionTemplate(currentDestination);
   const destinationsListTemplate = createDestinationsListTemplate(destinations);
   return (
     `<li class="trip-events__item">
@@ -115,26 +147,14 @@ function createAddPointTemplate(point, destinations, offers) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
         </header>
         <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">
-              ${offersTemplate}
-            </div>
-          </section>
-
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">${currentDestination ? currentDestination.name : ''}</h3>
-            <p class="event__destination-description">${currentDestination ? currentDestination.description : ''}</p>
-
-            <div class="event__photos-container">
-              <div class="event__photos-tape">
-                ${fotosTemplate}
-              </div>
-            </div>
-          </section>
+            ${offersTemplate}
+            ${descriptionTemplate}
         </section>
       </form>
     </li>`
@@ -150,9 +170,11 @@ export default class AddPointView extends AbstractStatefulView {
 
   #handleCloseButtonClick = null;
   #handleFormSubmit = null;
+  #handleDeleteClick = null;
 
-  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick}) {
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick}) {
     super();
+    console.log(point);
     this._setState(AddPointView.parsePointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
@@ -161,6 +183,7 @@ export default class AddPointView extends AbstractStatefulView {
 
     this.#handleCloseButtonClick = onCloseButtonClick;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
   }
 
   removeElement() {
@@ -189,11 +212,12 @@ export default class AddPointView extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeButtonClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeButtonClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
     this.element.querySelector('.event__input').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerCurrentHandler);
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerCurrentHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__reset-btn')?.addEventListener('click', this.#formDeleteClickHandler);
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
   }
@@ -215,7 +239,7 @@ export default class AddPointView extends AbstractStatefulView {
       this.#datepickerStart = flatpickr(
         this.element.querySelector('#event-start-time-1'),
         {
-          // maxDate: new Date(this._state.dateTo),
+          maxDate: new Date(this._state.dateTo),
           dateFormat: 'd/m/y H:i',
           enableTime: true,
           'time_24hr': true,
@@ -278,6 +302,11 @@ export default class AddPointView extends AbstractStatefulView {
     this.updateElement({
       basePrice: parseInt(evt.target.value,10),
     });
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(AddPointView.parseStateToPoint(this._state));
   };
 
   #formSubmitHandler = (evt) => {
