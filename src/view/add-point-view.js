@@ -45,10 +45,11 @@ function createOffersTemplate(offerByType, currentOffers) {
   )
 }
 
-function createDescriptionTemplate({name, description, pictures}) {
-  if (!description) {
+function createDescriptionTemplate(currentDestination) {
+  if (!currentDestination) {
     return '';
   }
+  const {name, description, pictures} = currentDestination;
   return (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">${name}</h3>
