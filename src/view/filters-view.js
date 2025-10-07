@@ -17,7 +17,7 @@ function createFilterItemTemplate(filter, isChecked) {
 
       <label
         class="trip-filters__filter-label"
-        for="filter-present">${type[0].toUpperCase() + type.slice(1)}
+        for="filter-${type}">${type[0].toUpperCase() + type.slice(1)}
       </label>
     </div>`
   );
