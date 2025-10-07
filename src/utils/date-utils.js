@@ -40,11 +40,15 @@ const isEventToCome = (dueDate) => dayjs().isBefore(dueDate);
 const isEventPresent = (dateFrom, dateTo) => dayjs()
   .isAfter(dateFrom) && dayjs().isBefore(dateTo);
 
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+
+
 export {
   humanizeTaskDueDate,
   getDurationTime,
   generateRandomDate,
   isEventExpired,
   isEventToCome,
-  isEventPresent
+  isEventPresent,
+  isDatesEqual,
 };
