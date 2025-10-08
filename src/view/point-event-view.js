@@ -23,6 +23,7 @@ function createPointTemplate(point, destinations, offers) {
   const dateDataStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_PERIOD_FORMAT);
   const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_PERIOD_FORMAT);
   const dateDataEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_DATA_PERIOD_FORMAT);
+
   const currentDestination = destinations.find((element) => element.id === destination);
   const offerByType = findOfferByType(offers, type);
 

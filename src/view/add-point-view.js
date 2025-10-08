@@ -1,20 +1,11 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
-import {DateFormat} from '../const.js';
+import {findOfferByType} from '../utils/events-utils.js';
+import {DateFormat, BLANK_POINT, MIN_POINT_PRICE} from '../const.js';
 import flatpickr from 'flatpickr';
 import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
-
-const BLANK_POINT = {
-  basePrice: '',
-  dateFrom: null,
-  dateTo: null,
-  destination: '',
-  isFavorite: false,
-  offers: [],
-  type: 'Flight'
-};
 
 function createOffersTemplate(offerByType, currentOffers) {
   if (offerByType.length === 0) {
@@ -91,19 +82,23 @@ function createDestinationsListTemplate(destinations) {
 }
 
 function createAddPointTemplate(point, destinations, offers, isNewPoint) {
-  console.log(isNewPoint);
 
   const {basePrice, dateFrom, dateTo, destination, type, offers: currentOffers} = point;
+
   const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_ADD_FORMAT);
   const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_ADD_FORMAT);
 
   const currentDestination = destinations.find((element) => element.id === destination);
-  const offerByType = offers.find((offer) => offer.type === type);
+  const offerByType = findOfferByType(offers, type);
 
   const eventsTemplate = createEventsTemplate(offers);
   const offersTemplate = createOffersTemplate(offerByType, currentOffers);
   const descriptionTemplate = createDescriptionTemplate(currentDestination);
   const destinationsListTemplate = createDestinationsListTemplate(destinations);
+  const rollupButtonTemplate = `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`;
+
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -131,7 +126,8 @@ function createAddPointTemplate(point, destinations, offers, isNewPoint) {
               id="event-destination-1"
               type="text" name="event-destination"
               value="${he.encode(currentDestination ? currentDestination.name : '')}"
-              list="destination-list-1">
+              list="destination-list-1"
+              required>
             <datalist id="destination-list-1">
               ${destinationsListTemplate}
             </datalist>
@@ -154,10 +150,8 @@ function createAddPointTemplate(point, destinations, offers, isNewPoint) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+          ${!isNewPoint ? rollupButtonTemplate : ''}
         </header>
         <section class="event__details">
             ${offersTemplate}
@@ -171,6 +165,7 @@ function createAddPointTemplate(point, destinations, offers, isNewPoint) {
 export default class AddPointView extends AbstractStatefulView {
   #destinations = null;
   #offers = null;
+  #isNewPoint = null;
 
   #datepickerStart = null;
   #datepickerEnd = null;
@@ -178,69 +173,24 @@ export default class AddPointView extends AbstractStatefulView {
   #handleCloseButtonClick = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
-  #isNewPoint;
 
   constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick, isNewPoint = false}) {
     super();
     this._setState(AddPointView.parsePointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#isNewPoint = isNewPoint;
 
     this._restoreHandlers();
 
     this.#handleCloseButtonClick = onCloseButtonClick;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
-    this.#isNewPoint = isNewPoint;
-  }
-
-  removeElement() {
-    super.removeElement();
-
-    if (this.#datepickerStart) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-    }
-
-    if (this.#datepickerEnd) {
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-    }
   }
 
   get template() {
     return createAddPointTemplate(this._state, this.#destinations, this.#offers, this.#isNewPoint);
   }
-
-  reset(point) {
-    this.updateElement(
-      AddPointView.parsePointToState(point),
-    );
-  }
-
-  _restoreHandlers() {
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeButtonClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
-    this.element.querySelector('.event__input').addEventListener('change', this.#destinationChangeHandler);
-    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerCurrentHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
-    this.element.querySelector('.event__reset-btn')?.addEventListener('click', this.#formDeleteClickHandler);
-    this.#setDatepickerFrom();
-    this.#setDatepickerTo();
-  }
-
-  #dateFromChangeHandler = ([userDateFrom]) => {
-    this.updateElement({
-      dateFrom: userDateFrom.toISOString(),
-    });
-  };
-
-  #dateToChangeHandler = ([userDateTo]) => {
-    this.updateElement({
-      dateTo: userDateTo.toISOString(),
-    });
-  };
 
   #setDatepickerFrom() {
     this.#datepickerStart = flatpickr(
@@ -268,6 +218,51 @@ export default class AddPointView extends AbstractStatefulView {
       },
     );
   }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
+  }
+
+  reset(point) {
+    this.updateElement(
+      AddPointView.parsePointToState(point),
+    );
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#closeButtonClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__input').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerCurrentHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__reset-btn')?.addEventListener('click', this.#formDeleteClickHandler);
+
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
+  }
+
+  #dateFromChangeHandler = ([userDateFrom]) => {
+    this.updateElement({
+      dateFrom: userDateFrom.toISOString(),
+    });
+  };
+
+  #dateToChangeHandler = ([userDateTo]) => {
+    this.updateElement({
+      dateTo: userDateTo.toISOString(),
+    });
+  };
 
   #eventTypeToggleHandler = (evt) => {
     const target = evt.target.closest('.event__type-item');
@@ -302,8 +297,9 @@ export default class AddPointView extends AbstractStatefulView {
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
+    const newPrice = parseInt(evt.target.value,10);
     this.updateElement({
-      basePrice: parseInt(evt.target.value,10),
+      basePrice: newPrice > MIN_POINT_PRICE ? newPrice : MIN_POINT_PRICE,
     });
   };
 
@@ -314,6 +310,13 @@ export default class AddPointView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+    const destinationInputValue = this.element.querySelector('.event__input--destination').value.trim();
+    const destinationOptions = this.#destinations.map((destination) => destination.name);
+
+    if (!destinationOptions.includes(destinationInputValue)) {
+      return;
+    }
+
     this.#handleFormSubmit(AddPointView.parseStateToPoint(this._state));
   };
 

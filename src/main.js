@@ -17,6 +17,7 @@ const filterModel = new FilterModel();
 const infoPresenter = new InfoPresenter({
   infoContainer: tripHeaderElement,
   pointsModel,
+  filterModel,
 });
 
 const boardPresenter = new BoardPresenter({

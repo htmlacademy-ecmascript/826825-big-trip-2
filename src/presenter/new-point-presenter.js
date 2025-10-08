@@ -12,7 +12,6 @@ export default class NewPointPresenter {
   #pointEditComponent = null;
   #destinations = null;
   #offers = null;
-  #isNewPoint = true;
 
   constructor({tripListContainer, onDataChange, onDestroy, destinations, offers}) {
     this.#tripListContainer = tripListContainer;
@@ -33,7 +32,7 @@ export default class NewPointPresenter {
       offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
-      isNewPoint: this.#isNewPoint,
+      isNewPoint: true,
     });
 
     render(this.#pointEditComponent, this.#tripListContainer, RenderPosition.AFTERBEGIN);
