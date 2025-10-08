@@ -12,6 +12,7 @@ export default class NewPointPresenter {
   #pointEditComponent = null;
   #destinations = null;
   #offers = null;
+  #isNewPoint = true;
 
   constructor({tripListContainer, onDataChange, onDestroy, destinations, offers}) {
     this.#tripListContainer = tripListContainer;
@@ -26,13 +27,13 @@ export default class NewPointPresenter {
     if (this.#pointEditComponent !== null) {
       return;
     }
-    
 
     this.#pointEditComponent = new AddPointView({
-        destinations: this.#destinations,
-        offers: this.#offers,
-        onFormSubmit: this.#handleFormSubmit,
-        onDeleteClick: this.#handleDeleteClick
+      destinations: this.#destinations,
+      offers: this.#offers,
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
+      isNewPoint: this.#isNewPoint,
     });
 
     render(this.#pointEditComponent, this.#tripListContainer, RenderPosition.AFTERBEGIN);
@@ -54,8 +55,7 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом сами
+
       {id: nanoid(), ...point},
     );
     this.destroy();

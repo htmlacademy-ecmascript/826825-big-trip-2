@@ -25,8 +25,8 @@ export default class InfoPresenter {
 
   init() {
     this.#infoPoints = [...this.#pointsModel.points];
-    this.#infoDestinations = [...this.#destinationsModel.destinations];
-    this.#infoOffers = [...this.#offersModel.offers];
+    this.#infoDestinations = this.#pointsModel.destinations;
+    this.#infoOffers = this.#pointsModel.offers;
 
     render(this.#infoComponent, this.#infoContainer);
     render(new TripInfoDestinationView({
@@ -36,6 +36,4 @@ export default class InfoPresenter {
       points: this.#infoPoints,
       offers: this.#infoOffers}), this.#infoComponent.element);
   }
-
-  
 }

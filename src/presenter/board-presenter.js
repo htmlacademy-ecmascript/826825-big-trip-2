@@ -12,7 +12,7 @@ import NewPointPresenter from './new-point-presenter.js';
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
-  #destinationsModel = null;
+  // #destinationsModel = null;
   #offersModel = null;
   #filterModel = null;
   #boardComponent = new BoardView();
@@ -27,17 +27,18 @@ export default class BoardPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({boardContainer, pointsModel, destinationsModel, offersModel, filterModel, onNewPointDestroy}) {
+  constructor({boardContainer, pointsModel, offersModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
-    this.#destinationsModel = destinationsModel;
+    // this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#filterModel = filterModel;
 
     this.#newPointPresenter = new NewPointPresenter({
       tripListContainer: this.#tripListComponent.element,
-      destinations: [...this.#destinationsModel.destinations],
-      offers: [...this.#offersModel.offers],
+      // destinations: [...this.#destinationsModel.destinations],
+      destinations: this.#pointsModel.destinations,
+      offers: this.#pointsModel.offers,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
@@ -59,15 +60,16 @@ export default class BoardPresenter {
       case SortType.TIME:
         return filteredPoints.sort(sortPointsByTime);
       case SortType.DAY:
-        return filteredPoints.sort(sortPointsByDay);  
+        return filteredPoints.sort(sortPointsByDay);
     }
 
     return filteredPoints;
   }
 
   init() {
-    this.#boardDestinations = [...this.#destinationsModel.destinations];
-    this.#boardOffers = [...this.#offersModel.offers];
+    // this.#boardDestinations = [...this.#destinationsModel.destinations];
+    this.#boardDestinations = this.#pointsModel.destinations;
+    this.#boardOffers = this.#pointsModel.offers;
 
     this.#renderBoard();
   }
@@ -103,7 +105,7 @@ export default class BoardPresenter {
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
     }
-   
+
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
@@ -159,7 +161,6 @@ export default class BoardPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
     switch (actionType) {
 
       case UserAction.UPDATE_POINT:
@@ -175,7 +176,6 @@ export default class BoardPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)

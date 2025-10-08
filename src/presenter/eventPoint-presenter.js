@@ -118,8 +118,8 @@ export default class PointPresenter {
     const isMinorUpdate =
       !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
       !isDatesEqual(this.#point.dateTo, update.dateTo);
-    
-      this.#handleDataChange(
+
+    this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update

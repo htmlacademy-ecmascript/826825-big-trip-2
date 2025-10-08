@@ -2,10 +2,11 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat} from '../const.js';
 import flatpickr from 'flatpickr';
+import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
+
 const BLANK_POINT = {
-  id: '',
   basePrice: '',
   dateFrom: null,
   dateTo: null,
@@ -16,7 +17,7 @@ const BLANK_POINT = {
 };
 
 function createOffersTemplate(offerByType, currentOffers) {
-  if (offerByType.length === 0 ) {
+  if (offerByType.length === 0) {
     return '';
   }
 
@@ -24,25 +25,25 @@ function createOffersTemplate(offerByType, currentOffers) {
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${offerByType.offers.map((offer) => 
-            `<div class="event__offer-selector">
-              <input
-                class="event__offer-checkbox visually-hidden"
-                id="event-offer-${offer.title.split(' ')[0]}-${offer.id}"
-                type="checkbox"
-                name="event-offer-${offer.title.split(' ')[0]}"
-                data-offer-id="${offer.id}"
-                ${currentOffers.includes(offer.id) ? 'checked' : ''}>
-              <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-${offer.id}">
-                <span class="event__offer-title">${offer.title}</span>
-                &plus;&euro;&nbsp;
-                <span class="event__offer-price">${offer.price}</span>
-              </label>
-            </div>`).join('')
-            }
+          ${offerByType.offers.map((offer) =>
+      `<div class="event__offer-selector">
+        <input
+          class="event__offer-checkbox visually-hidden"
+          id="event-offer-${offer.title.split(' ')[0]}-${offer.id}"
+          type="checkbox"
+          name="event-offer-${offer.title.split(' ')[0]}"
+          data-offer-id="${offer.id}"
+          ${currentOffers.includes(offer.id) ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-${offer.title.split(' ')[0]}-${offer.id}">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`).join('')
+    }
         </div>
     </section>`
-  )
+  );
 }
 
 function createDescriptionTemplate(currentDestination) {
@@ -61,7 +62,7 @@ function createDescriptionTemplate(currentDestination) {
         </div>
       </div>
     </section>`
-  )
+  );
 }
 
 function createFotosTemplate(pictures) {
@@ -89,7 +90,8 @@ function createDestinationsListTemplate(destinations) {
   return destinations.map(({name}) => `<option value=${name}></option>`).join('');
 }
 
-function createAddPointTemplate(point, destinations, offers) {
+function createAddPointTemplate(point, destinations, offers, isNewPoint) {
+  console.log(isNewPoint);
 
   const {basePrice, dateFrom, dateTo, destination, type, offers: currentOffers} = point;
   const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_ADD_FORMAT);
@@ -125,7 +127,11 @@ function createAddPointTemplate(point, destinations, offers) {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination ? currentDestination.name : ''}" list="destination-list-1">
+            <input class="event__input  event__input--destination"
+              id="event-destination-1"
+              type="text" name="event-destination"
+              value="${he.encode(currentDestination ? currentDestination.name : '')}"
+              list="destination-list-1">
             <datalist id="destination-list-1">
               ${destinationsListTemplate}
             </datalist>
@@ -144,7 +150,7 @@ function createAddPointTemplate(point, destinations, offers) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(basePrice.toString())}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -172,10 +178,10 @@ export default class AddPointView extends AbstractStatefulView {
   #handleCloseButtonClick = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
+  #isNewPoint;
 
-  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick}) {
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick, isNewPoint = false}) {
     super();
-    console.log(point);
     this._setState(AddPointView.parsePointToState(point));
     this.#destinations = destinations;
     this.#offers = offers;
@@ -185,6 +191,7 @@ export default class AddPointView extends AbstractStatefulView {
     this.#handleCloseButtonClick = onCloseButtonClick;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#isNewPoint = isNewPoint;
   }
 
   removeElement() {
@@ -202,7 +209,7 @@ export default class AddPointView extends AbstractStatefulView {
   }
 
   get template() {
-    return createAddPointTemplate(this._state, this.#destinations, this.#offers);
+    return createAddPointTemplate(this._state, this.#destinations, this.#offers, this.#isNewPoint);
   }
 
   reset(point) {
@@ -225,46 +232,41 @@ export default class AddPointView extends AbstractStatefulView {
 
   #dateFromChangeHandler = ([userDateFrom]) => {
     this.updateElement({
-      dateFrom: userDateFrom,
+      dateFrom: userDateFrom.toISOString(),
     });
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
     this.updateElement({
-      dateTo: userDateTo,
+      dateTo: userDateTo.toISOString(),
     });
   };
 
   #setDatepickerFrom() {
-    if (this._state.dateFrom) {
-      this.#datepickerStart = flatpickr(
-        this.element.querySelector('#event-start-time-1'),
-        {
-          maxDate: new Date(this._state.dateTo),
-          dateFormat: 'd/m/y H:i',
-          enableTime: true,
-          'time_24hr': true,
-          defaultDate: this._state.dateFrom,
-          onChange: this.#dateFromChangeHandler,
-        },
-      );
-    }
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
   }
 
   #setDatepickerTo() {
-    if (this._state.dateTo) {
-      this.#datepickerEnd = flatpickr(
-        this.element.querySelector('#event-end-time-1'),
-        {
-          minDate: new Date(this._state.dateFrom),
-          dateFormat: 'd/m/y H:i',
-          enableTime: true,
-          'time_24hr': true,
-          defaultDate: this._state.dateTo,
-          onChange: this.#dateToChangeHandler,
-        },
-      );
-    }
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        minDate: new Date(this._state.dateFrom),
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #eventTypeToggleHandler = (evt) => {
