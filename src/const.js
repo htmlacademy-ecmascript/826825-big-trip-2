@@ -13,6 +13,17 @@ const DESCRIPTION = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
   'In rutrum ac purus sit amet tempus.'];
 const POINT_COUNT = 4;
+const MIN_POINT_PRICE = 0;
+
+const BLANK_POINT = {
+  basePrice: MIN_POINT_PRICE,
+  dateFrom: null,
+  dateTo: null,
+  destination: '',
+  isFavorite: false,
+  offers: [],
+  type: 'Flight',
+};
 
 const DateFormat = {
   DATE_ADD_FORMAT: 'DD/MM/YY hh:mm',
@@ -41,6 +52,18 @@ const SortType = {
   PRICE: 'price'
 };
 
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
 
 export {
   POINT_TYPES,
@@ -51,5 +74,9 @@ export {
   POINT_COUNT,
   DateFormat,
   FilterType,
-  SortType
+  SortType,
+  UserAction,
+  UpdateType,
+  MIN_POINT_PRICE,
+  BLANK_POINT,
 };

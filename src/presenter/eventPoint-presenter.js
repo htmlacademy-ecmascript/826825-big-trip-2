@@ -1,6 +1,8 @@
 import {render, replace, remove} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
 import PointEventView from '../view/point-event-view.js';
+import {UserAction, UpdateType} from '../const.js';
+import {isDatesEqual} from '../utils/date-utils.js';
 
 /**
  * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
@@ -24,7 +26,7 @@ export default class PointPresenter {
 
   /** @type {(point: Point) => void} */
   #handleDataChange;
-  #handleModeChange
+  #handleModeChange;
 
   /**
    * @param {HTMLElement} tripListContainer
@@ -59,6 +61,7 @@ export default class PointPresenter {
       destinations: this.#destinations,
       offers: this.#offers,
       onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
       onCloseButtonClick: this.#handleCloseButtonClick,
     });
 
@@ -117,15 +120,36 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
   };
 
   /**
    * @param {Point} point
    * */
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dateTo);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update
+    );
+
     this.#replaceFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 
   #handleCloseButtonClick = () => {

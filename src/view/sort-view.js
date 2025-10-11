@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {SortType} from '../const.js';
 
-function createSortTemplate() {
+function createSortTemplate(currentSortType) {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <div class="trip-sort__item  trip-sort__item--day">
@@ -10,7 +10,7 @@ function createSortTemplate() {
           type="radio"
           name="trip-sort"
           value="sort-day"
-          checked
+          ${currentSortType === SortType.DAY ? 'checked' : ''}
           data-sort-type="${SortType.DAY}">
         <label class="trip-sort__btn" for="sort-day">Day</label>
       </div>
@@ -32,6 +32,7 @@ function createSortTemplate() {
           type="radio"
           name="trip-sort"
           value="sort-time"
+          ${currentSortType === SortType.TIME ? 'checked' : ''}
           data-sort-type="${SortType.TIME}">
         <label class="trip-sort__btn" for="sort-time">Time</label>
       </div>
@@ -43,6 +44,7 @@ function createSortTemplate() {
           type="radio"
           name="trip-sort"
           value="sort-price"
+          ${currentSortType === SortType.PRICE ? 'checked' : ''}
           data-sort-type="${SortType.PRICE}">
         <label class="trip-sort__btn" for="sort-price">Price</label>
       </div>
@@ -62,12 +64,18 @@ function createSortTemplate() {
 }
 
 export default class SortView extends AbstractView {
+  #currentSortType = null;
   #handleSortTypeChange = null;
 
-  constructor({onSortTypeChange}) {
+  constructor({currentSortType, onSortTypeChange}) {
     super();
+    this.#currentSortType = currentSortType;
     this.#handleSortTypeChange = onSortTypeChange;
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
+  }
+
+  get template() {
+    return createSortTemplate(this.#currentSortType);
   }
 
   #sortTypeChangeHandler = (evt) => {
@@ -78,8 +86,4 @@ export default class SortView extends AbstractView {
     evt.preventDefault();
     this.#handleSortTypeChange(evt.target.dataset.sortType);
   };
-
-  get template() {
-    return createSortTemplate();
-  }
 }

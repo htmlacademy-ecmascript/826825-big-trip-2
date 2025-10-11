@@ -26,14 +26,14 @@ const getRandomUniqueInteger = (maxNumber) => {
   return getUniqueNumber;
 };
 
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
+// function updateItem(items, update) {
+//   return items.map((item) => item.id === update.id ? update : item);
+// }
 
 export {
   getRandomArrayElement,
   getBooleanType,
   getRandomUniqueInteger,
-  getRandomInteger,
-  updateItem
+  getRandomInteger
+  // updateItem
 };
