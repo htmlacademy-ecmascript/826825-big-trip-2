@@ -2,24 +2,37 @@ import {render, replace, remove} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
 import PointEventView from '../view/point-event-view.js';
 
+/**
+ * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
+ * @typedef {{description: string, id: number, name: string, pictures: {src: string, description: string}[]}[]} Destinations
+ * */
+
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
-
 
 export default class PointPresenter {
   #tripListContainer = null;
   #pointComponent = null;
   #pointEditComponent = null;
   #point = null;
-  #destinations = null;
+  /** @type {Destinations} */
+  #destinations;
   #offers = null;
   #mode = Mode.DEFAULT;
 
-  #handleDataChange = null;
-  #handleModeChange = null;
+  /** @type {(point: Point) => void} */
+  #handleDataChange;
+  #handleModeChange
 
+  /**
+   * @param {HTMLElement} tripListContainer
+   * @param {(point: Point) => void} onDataChange
+   * @param {Function} onModeChange
+   * @param {Destinations} destinations
+   * @param {Object} offers
+   * */
   constructor({tripListContainer, onDataChange, onModeChange, destinations, offers}) {
     this.#tripListContainer = tripListContainer;
     this.#handleDataChange = onDataChange;
@@ -107,6 +120,9 @@ export default class PointPresenter {
     this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
+  /**
+   * @param {Point} point
+   * */
   #handleFormSubmit = (point) => {
     this.#handleDataChange(point);
     this.#replaceFormToPoint();

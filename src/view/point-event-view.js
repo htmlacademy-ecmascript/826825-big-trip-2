@@ -14,7 +14,11 @@ function createOffersTemplate (offers) {
   </li>`).join('');
 }
 
-
+/**
+ * @param {Point} point
+ * @param {Destinations} destinations
+ * @param {Object} offers
+ * */
 function createPointTemplate(point, destinations, offers) {
   const {basePrice, dateFrom, dateTo, destination, isFavorite, type, offers: currentOffers} = point;
   const day = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DAY_FORMAT);
@@ -71,12 +75,20 @@ function createPointTemplate(point, destinations, offers) {
 }
 
 export default class PointEventView extends AbstractView {
-  #point = null;
-  #destinations = null;
-  #offers = null;
-  #handleFavoriteClick = null;
+  #point;
+  #destinations;
+  #offers;
+  #handleFavoriteClick;
 
-  #handleEditClick = null;
+  #handleEditClick;
+
+  /**
+   * @param {Point} point
+   * @param {Destinations} destinations
+   * @param {Object} offers
+   * @param {Function} onEditClick
+   * @param {Function} onFavoriteClick
+   * */
   constructor({point, destinations, offers, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
