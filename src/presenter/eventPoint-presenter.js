@@ -26,7 +26,7 @@ export default class PointPresenter {
 
   /** @type {(point: Point) => void} */
   #handleDataChange;
-  #handleModeChange
+  #handleModeChange;
 
   /**
    * @param {HTMLElement} tripListContainer
