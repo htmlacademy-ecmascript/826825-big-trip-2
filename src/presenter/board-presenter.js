@@ -8,6 +8,7 @@ import SortView from '../view/sort-view.js';
 import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './eventPoint-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -15,6 +16,7 @@ export default class BoardPresenter {
   #filterModel = null;
   #boardComponent = new BoardView();
   #tripListComponent = new TripListView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
   #sortComponent = null;
   #pointPresenters = new Map();
@@ -24,6 +26,7 @@ export default class BoardPresenter {
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
@@ -77,6 +80,11 @@ export default class BoardPresenter {
   #renderBoard() {
     render(this.#boardComponent, this.#boardContainer);
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoints();
       return;
@@ -94,6 +102,7 @@ export default class BoardPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointComponent) {
       remove(this.#noPointComponent);
@@ -111,7 +120,7 @@ export default class BoardPresenter {
       onSortTypeChange: this.#handleSortTypeChange
     });
 
-    render(this.#sortComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+    render(this.#sortComponent, this.#boardComponent.element);
   }
 
   #renderNoPoints() {
@@ -133,6 +142,10 @@ export default class BoardPresenter {
 
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#boardComponent.element);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -182,6 +195,11 @@ export default class BoardPresenter {
         this.#renderBoard();
         // - обновить всю доску (например, при переключении фильтра)
         break;
+        case UpdateType.INIT:
+          this.#isLoading = false;
+          remove(this.#loadingComponent);
+          this.#renderBoard();
+          break;  
     }
   };
 }

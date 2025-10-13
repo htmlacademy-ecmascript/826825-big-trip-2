@@ -1,6 +1,5 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
-import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../const.js';
 
 
@@ -34,6 +33,7 @@ export default class NewPointPresenter {
       onDeleteClick: this.#handleDeleteClick,
       isNewPoint: true,
     });
+    
 
     render(this.#pointEditComponent, this.#tripListContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -54,8 +54,7 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-
-      {id: nanoid(), ...point},
+      point,
     );
     this.destroy();
   };

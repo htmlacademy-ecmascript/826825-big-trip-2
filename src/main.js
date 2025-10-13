@@ -5,13 +5,20 @@ import BoardPresenter from './presenter/board-presenter.js';
 import InfoPresenter from './presenter/info-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+import PointsApiService from './points-api-service';
+
+const AUTHORIZATION = 'Basic cNunTvZcrYNgGgm';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteHeaderElement = document.querySelector('.page-header');
 const tripHeaderElement = siteHeaderElement.querySelector('.trip-main');
 const pageMainElement = document.querySelector('.page-main');
 const mainContainer = pageMainElement.querySelector('.page-body__container');
 
-const pointsModel = new PointsModel();
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+
 const filterModel = new FilterModel();
 
 const infoPresenter = new InfoPresenter({
@@ -48,6 +55,10 @@ function handleNewPointButtonClick() {
 
 infoPresenter.init();
 filterPresenter.init();
-render(newEventButtonComponent, tripHeaderElement);
+
 
 boardPresenter.init();
+pointsModel.init()
+  .finally(() => {
+    render(newEventButtonComponent, tripHeaderElement);
+  });
