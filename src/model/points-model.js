@@ -1,14 +1,14 @@
 import Observable from '../framework/observable.js';
-import DestinationsModel from './destinations-model.js';
-import OffersModel from './offers-model.js';
+// import DestinationsModel from './destinations-model.js';
+// import OffersModel from './offers-model.js';
 import {UpdateType} from '../const.js';
 
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
   #points = [];
-  #destinationsModel = new DestinationsModel();
-  #offersModel = new OffersModel();
+  #destinations = [];
+  #offers = [];
 
   constructor({pointsApiService}) {
     super();
@@ -16,11 +16,11 @@ export default class PointsModel extends Observable {
   }
 
   get offers() {
-    return [...this.#offersModel.offers];
+    return this.#offers;
   }
 
   get destinations() {
-    return [...this.#destinationsModel.destinations];
+    return this.#destinations;
   }
 
   get points() {
@@ -30,12 +30,18 @@ export default class PointsModel extends Observable {
   async init() {
     try {
       const points = await this.#pointsApiService.points;
+      const offers = await this.#pointsApiService.offers;
+      const destination = await this.#pointsApiService.destinations;
       this.#points = points.map(this.#adaptToClient);
+      this.#offers = offers;
+      this.#destinations = destination;
+      this._notify(UpdateType.INIT);
     } catch(err) {
       this.#points = [];
+      this.#destinations = [];
+      this.#offers = [];
     }
-
-    UpdateType.INIT
+    // this._notify(UpdateType.INIT);
   }
 
   async updatePoint(updateType, update) {
@@ -81,7 +87,7 @@ export default class PointsModel extends Observable {
     }
 
     try {
-      await this.#pointsApiService.deleteTask(update);
+      await this.#pointsApiService.deletePoint(update);
       this.#points = [
         ...this.#points.slice(0, index),
         ...this.#points.slice(index + 1),
@@ -93,7 +99,6 @@ export default class PointsModel extends Observable {
     }
   }
 
-  
   #adaptToClient(point) {
     const adaptedPoint = {...point,
       id: point['id'],

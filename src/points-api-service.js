@@ -14,6 +14,16 @@ export default class PointsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
+  get offers() {
+    return this._load({url: 'offers'})
+      .then(ApiService.parseResponse);
+  }
+
+  get destinations() {
+    return this._load({url: 'destinations'})
+      .then(ApiService.parseResponse);
+  }
+
   async updatePoint(point) {
     const response = await this._load({
       url: `points/${point.id}`,
@@ -27,7 +37,7 @@ export default class PointsApiService extends ApiService {
 
   }
 
-  async addTask(point) {
+  async addPoint(point) {
 
     const response = await this._load({
       url: 'points',
@@ -40,7 +50,7 @@ export default class PointsApiService extends ApiService {
     return parsedResponse;
   }
 
-  async deleteTask(point) {
+  async deletePoint(point) {
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.DELETE,
@@ -53,10 +63,10 @@ export default class PointsApiService extends ApiService {
     const adaptedPoint = {...point,
       'id': point.id,
       'base_price': point.basePrice,
-      'date_from': point.dateFrom instanceof Date ? point.dateFrom.toISOString() : null,
-      'date_to': point.dateTo instanceof Date ? point.dateTo.toISOString() : null,
+      'date_from': point.dateFrom,
+      'date_to': point.dateTo,
       'destination': point.destination,
-      'is_favorite:': point.isFavorite,
+      'is_favorite': point.isFavorite,
       'offers': point.offers,
       'type': point.type
     };

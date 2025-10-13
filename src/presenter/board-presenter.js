@@ -23,6 +23,7 @@ export default class BoardPresenter {
   #boardDestinations = [];
   #boardOffers = [];
   #newPointPresenter = null;
+  #onNewPointDestroy = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
@@ -32,15 +33,17 @@ export default class BoardPresenter {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#onNewPointDestroy = onNewPointDestroy;
+    // const destinations = this.#pointsModel.destinations;
+    // const offers = this.#pointsModel.offers;
 
-    this.#newPointPresenter = new NewPointPresenter({
-      tripListContainer: this.#tripListComponent.element,
-      destinations: this.#pointsModel.destinations,
-      offers: this.#pointsModel.offers,
-      onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy
-    });
-
+    // this.#newPointPresenter = new NewPointPresenter({
+    //   tripListContainer: this.#tripListComponent.element,
+    //   destinations: this.#boardDestinations,
+    //   offers: this.#boardOffers,
+    //   onDataChange: this.#handleViewAction,
+    //   onDestroy: this.#onNewPointDestroy,
+    // });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -50,6 +53,9 @@ export default class BoardPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
+    // const offers = this.#pointsModel.offers;
+    // const destinations = this.#pointsModel.destinations;
+    // console.log(destinations);
     const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
@@ -74,7 +80,8 @@ export default class BoardPresenter {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init();
+    // this.#newPointPresenter.init();
+    this.#renderNewPoint();
   }
 
   #renderBoard() {
@@ -129,6 +136,17 @@ export default class BoardPresenter {
     });
 
     render(this.#noPointComponent, this.#boardComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderNewPoint() {
+    this.#newPointPresenter = new NewPointPresenter({
+      tripListContainer: this.#tripListComponent.element,
+      destinations: this.#boardDestinations,
+      offers: this.#boardOffers,
+      onDataChange: this.#handleViewAction,
+      onDestroy: this.#onNewPointDestroy,
+    });
+    this.#newPointPresenter.init();
   }
 
   #renderPoint(point) {
@@ -195,11 +213,11 @@ export default class BoardPresenter {
         this.#renderBoard();
         // - обновить всю доску (например, при переключении фильтра)
         break;
-        case UpdateType.INIT:
-          this.#isLoading = false;
-          remove(this.#loadingComponent);
-          this.#renderBoard();
-          break;  
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.init();
+        break;
     }
   };
 }

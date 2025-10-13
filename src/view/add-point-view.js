@@ -82,13 +82,17 @@ function createDestinationsListTemplate(destinations) {
 }
 
 function createAddPointTemplate(point, destinations, offers, isNewPoint) {
-
+  // console.log(destinations);
+  // console.log(offers);
+  // console.log(point);
   const {basePrice, dateFrom, dateTo, destination, type, offers: currentOffers} = point;
 
   const dateStart = humanizeTaskDueDate(dateFrom, DateFormat.DATE_ADD_FORMAT);
   const dateEnd = humanizeTaskDueDate(dateTo, DateFormat.DATE_ADD_FORMAT);
 
   const currentDestination = destinations.find((element) => element.id === destination);
+  console.log(offers);
+  console.log(type);
   const offerByType = findOfferByType(offers, type);
 
   const eventsTemplate = createEventsTemplate(offers);

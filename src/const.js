@@ -22,7 +22,7 @@ const BLANK_POINT = {
   destination: '',
   isFavorite: false,
   offers: [],
-  type: 'Flight',
+  type: 'flight',
 };
 
 const DateFormat = {

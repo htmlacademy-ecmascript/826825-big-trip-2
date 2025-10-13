@@ -33,7 +33,6 @@ export default class NewPointPresenter {
       onDeleteClick: this.#handleDeleteClick,
       isNewPoint: true,
     });
-    
 
     render(this.#pointEditComponent, this.#tripListContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);

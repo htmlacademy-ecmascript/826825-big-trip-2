@@ -21,6 +21,7 @@ function createOffersTemplate (offers) {
  * @param {Object} offers
  * */
 function createPointTemplate(point, destinations, offers) {
+  console.log(offers);
   const {basePrice, dateFrom, dateTo, destination, isFavorite, type, offers: currentOffers} = point;
   const day = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DAY_FORMAT);
   const dataDay = humanizeTaskDueDate(dateFrom, DateFormat.DATE_DATA_DAY_FORMAT);
