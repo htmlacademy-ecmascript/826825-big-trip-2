@@ -2,15 +2,30 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
 import {UserAction, UpdateType} from '../const.js';
 
+/**
+ * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
+ * @typedef {{description: string, id: number, name: string, pictures: {src: string, description: string}[]}[]} Destinations
+ * @typedef {{type: string, id: number, offers: {id: string, title: string, price: number}[]}[]} Offers
+ * */
 
 export default class NewPointPresenter {
-
-  #tripListContainer = null;
-  #handleDataChange = null;
-  #handleDestroy = null;
   #pointEditComponent = null;
-  #destinations = null;
-  #offers = null;
+  #tripListContainer = null;
+  /** @type {(point: Point) => void} */
+  #handleDataChange;
+  #handleDestroy;
+  /** @type {Destinations} */
+  #destinations;
+  /** @type {Offers} */
+  #offers;
+
+  /**
+   * @param {(point: Point) => void} onDataChange
+   * @param {Function} onDestroy
+   * @param {Function} onModeChange
+   * @param {Destinations} destinations
+   * @param {Offers} offers
+   * */
 
   constructor({tripListContainer, onDataChange, onDestroy, destinations, offers}) {
     this.#tripListContainer = tripListContainer;

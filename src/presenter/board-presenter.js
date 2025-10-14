@@ -2,12 +2,12 @@ import {render, remove} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import {sortPointsByPrice, sortPointsByDay, sortPointsByTime} from '../utils/events-utils.js';
 import {
-  SortType, 
-  UpdateType, 
-  UserAction, 
-  FilterType, 
-  NoPointsFiltersText, 
-  NoPointsText, 
+  SortType,
+  UpdateType,
+  UserAction,
+  FilterType,
+  NoPointsFiltersText,
+  NoPointsText,
   TimeLimit} from '../const.js';
 import {filter} from '../utils/filter.js';
 import BoardView from '../view/bord-view.js';
@@ -103,7 +103,7 @@ export default class BoardPresenter {
 
   #clearBoard({resetSortType = false} = {}) {
     this.#newPointPresenter?.destroy();
-    
+
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
     remove(this.#sortComponent);
@@ -149,7 +149,7 @@ export default class BoardPresenter {
   }
 
   #renderLoading() {
-    this.#renderNoPoints(NoPointsText.LOADING)
+    this.#renderNoPoints(NoPointsText.LOADING);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -215,12 +215,12 @@ export default class BoardPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        remove(this.#noPointComponent)
+        remove(this.#noPointComponent);
         this.#renderBoard();
         break;
       case UpdateType.ERROR:
         this.#isLoading = false;
-        remove(this.#noPointComponent)
+        remove(this.#noPointComponent);
         this.#renderNoPoints(NoPointsText.ERROR_TEXT);
         break;
     }

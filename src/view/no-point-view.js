@@ -9,7 +9,7 @@ function createNoPointTemplate(noPointsText) {
 }
 
 export default class NoPointView extends AbstractView {
-  #noPointsText = ''
+  #noPointsText = '';
 
   constructor(noPointsText) {
     super();

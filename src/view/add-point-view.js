@@ -81,15 +81,21 @@ function createDestinationsListTemplate(destinations) {
   return destinations.map(({name}) => `<option value=${name}></option>`).join('');
 }
 
+/**
+ * @param {Point} point
+ * @param {Destinations} destinations
+ * @param {Offers} offers
+ * */
+
 function createAddPointTemplate(point, destinations, offers, isNewPoint) {
- 
+
   const {
-    basePrice, 
-    dateFrom, 
-    dateTo, 
-    destination, 
-    type, 
-    offers: currentOffers, 
+    basePrice,
+    dateFrom,
+    dateTo,
+    destination,
+    type,
+    offers: currentOffers,
     isDisabled,
     isSaving,
     isDeleting
@@ -174,18 +180,27 @@ function createAddPointTemplate(point, destinations, offers, isNewPoint) {
 }
 
 export default class AddPointView extends AbstractStatefulView {
-  #destinations = null;
-  #offers = null;
-  #isNewPoint = null;
+  #destinations;
+  #offers;
+  #isNewPoint = false;
 
   #datepickerStart = null;
   #datepickerEnd = null;
 
-  #handleCloseButtonClick = null;
-  #handleFormSubmit = null;
-  #handleDeleteClick = null;
+  #handleCloseButtonClick;
+  #handleFormSubmit;
+  #handleDeleteClick;
 
-  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick, isNewPoint = false}) {
+  /**
+   * @param {Point} point
+   * @param {Destinations} destinations
+   * @param {Offers} offers
+   * @param {Function} onFormSubmit
+   * @param {Function} onCloseButtonClick
+   * @param {Function} onDeleteClick
+   * */
+
+  constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick, isNewPoint}) {
     super();
     this._setState(AddPointView.parsePointToState(point));
     this.#destinations = destinations;
@@ -319,7 +334,6 @@ export default class AddPointView extends AbstractStatefulView {
     this.#handleDeleteClick(AddPointView.parseStateToPoint(this._state));
   };
 
- 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     const destinationInput = this.element.querySelector('.event__input--destination');
@@ -328,18 +342,18 @@ export default class AddPointView extends AbstractStatefulView {
 
     destinationInput.setCustomValidity('');
     if (!destinationOptions.includes(destinationInput.value.trim())) {
-      destinationInput.setCustomValidity(ValidateText.DESTINATIONS_NAME_FALED)
+      destinationInput.setCustomValidity(ValidateText.DESTINATIONS_NAME_FALED);
       destinationInput.reportValidity();
     }
 
     priceInput.setCustomValidity('');
     if (priceInput.value > PointPrice.MAX_POINT_PRICE) {
-      priceInput.setCustomValidity(ValidateText.PRICE_MAX_FALED)
+      priceInput.setCustomValidity(ValidateText.PRICE_MAX_FALED);
       priceInput.reportValidity();
     }
 
     if (priceInput.value < PointPrice.MIN_POINT_PRICE) {
-      priceInput.setCustomValidity(ValidateText.PRICE_MIN_FALED)
+      priceInput.setCustomValidity(ValidateText.PRICE_MIN_FALED);
       priceInput.reportValidity();
     }
 

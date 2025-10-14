@@ -86,8 +86,8 @@ const Url = {
 
 const ValidateText = {
   PRICE_MAX_FALED: `стоимость не может превышать ${PointPrice.MAX_POINT_PRICE} €` ,
-  PRICE_MIN_FALED: `стоимость не может быть меньше ${PointPrice.MIN_POINT_PRICE} €`, 
-  DESTINATIONS_NAME_FALED: `Выберете путь из предложенного списка`,
+  PRICE_MIN_FALED: `стоимость не может быть меньше ${PointPrice.MIN_POINT_PRICE} €`,
+  DESTINATIONS_NAME_FALED: 'Выберете путь из предложенного списка',
 };
 
 export {

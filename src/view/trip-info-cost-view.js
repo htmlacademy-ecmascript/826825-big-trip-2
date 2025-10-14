@@ -20,8 +20,13 @@ function createTripInfoCostTemplate(points, offers) {
 }
 
 export default class TripInfoCostView extends AbstractView {
-  #points = null;
-  #offers = null;
+  #points;
+  #offers;
+
+  /**
+   * @param {Points} points
+   * @param {Offers} offers
+   * */
 
   constructor({points, offers}) {
     super();

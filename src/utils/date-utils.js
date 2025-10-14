@@ -19,7 +19,7 @@ const getDurationTime = (dateFrom, dateTo) => {
   if (durationObject.asDays() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
-  
+
   return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
 };
 

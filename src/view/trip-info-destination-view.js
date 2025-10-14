@@ -48,8 +48,13 @@ function createTripInfoDestinationTemplate(points, destinations) {
 }
 
 export default class TripInfoDestinationView extends AbstractView {
-  #points = null;
-  #destinations = null;
+  #points;
+  #destinations;
+
+  /**
+   * @param {Points} points
+   * @param {Destinations} destinations
+   * */
 
   constructor({points, destinations}) {
     super();
