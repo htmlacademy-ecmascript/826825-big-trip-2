@@ -1,4 +1,5 @@
 import ApiService from './framework/api-service.js';
+import {Url} from './const.js';
 
 const Method = {
   GET: 'GET',
@@ -10,23 +11,23 @@ const Method = {
 
 export default class PointsApiService extends ApiService {
   get points() {
-    return this._load({url: 'points'})
+    return this._load({url: Url.POINTS})
       .then(ApiService.parseResponse);
   }
 
   get offers() {
-    return this._load({url: 'offers'})
+    return this._load({url: Url.OFFERS})
       .then(ApiService.parseResponse);
   }
 
   get destinations() {
-    return this._load({url: 'destinations'})
+    return this._load({url: Url.DESTINATIONS})
       .then(ApiService.parseResponse);
   }
 
   async updatePoint(point) {
     const response = await this._load({
-      url: `points/${point.id}`,
+      url: `${Url.POINTS}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -40,7 +41,7 @@ export default class PointsApiService extends ApiService {
   async addPoint(point) {
 
     const response = await this._load({
-      url: 'points',
+      url: Url.POINTS,
       method: Method.POST,
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -52,7 +53,7 @@ export default class PointsApiService extends ApiService {
 
   async deletePoint(point) {
     const response = await this._load({
-      url: `points/${point.id}`,
+      url: `${Url.POINTS}/${point.id}`,
       method: Method.DELETE,
     });
     return response;
@@ -63,8 +64,8 @@ export default class PointsApiService extends ApiService {
     const adaptedPoint = {...point,
       'id': point.id,
       'base_price': point.basePrice,
-      'date_from': point.dateFrom,
-      'date_to': point.dateTo,
+      'date_from': point.dateFrom.toISOString(),
+      'date_to': point.dateTo.toISOString(),
       'destination': point.destination,
       'is_favorite': point.isFavorite,
       'offers': point.offers,

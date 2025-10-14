@@ -8,13 +8,6 @@ function humanizeTaskDueDate(dueDate, format) {
   return dueDate ? dayjs(dueDate).format(format) : '';
 }
 
-function generateRandomDate(from, to) {
-  return new Date(
-    from.getTime() +
-      Math.random() * (to.getTime() - from.getTime()),
-  ).getTime() + 1;
-}
-
 const getDurationTime = (dateFrom, dateTo) => {
   const date1 = dayjs(dateFrom);
   const date2 = dayjs(dateTo);
@@ -26,11 +19,8 @@ const getDurationTime = (dateFrom, dateTo) => {
   if (durationObject.asDays() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
-  if (durationObject.asMonths() < 1) {
-    return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
-  }
-  //добавлен на время использования тестовых данныхж
-  return durationObject.format(DateFormat.DATE_DURATION_MONTH_FORMAT);
+  
+  return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
 };
 
 const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);
@@ -46,7 +36,6 @@ const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || day
 export {
   humanizeTaskDueDate,
   getDurationTime,
-  generateRandomDate,
   isEventExpired,
   isEventToCome,
   isEventPresent,

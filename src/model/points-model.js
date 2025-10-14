@@ -1,6 +1,4 @@
 import Observable from '../framework/observable.js';
-// import DestinationsModel from './destinations-model.js';
-// import OffersModel from './offers-model.js';
 import {UpdateType} from '../const.js';
 
 
@@ -40,8 +38,8 @@ export default class PointsModel extends Observable {
       this.#points = [];
       this.#destinations = [];
       this.#offers = [];
+      this._notify(UpdateType.ERROR);
     }
-    // this._notify(UpdateType.INIT);
   }
 
   async updatePoint(updateType, update) {

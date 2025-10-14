@@ -1,18 +1,13 @@
 import {render, replace, remove} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
 import PointEventView from '../view/point-event-view.js';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, Mode} from '../const.js';
 import {isDatesEqual} from '../utils/date-utils.js';
 
 /**
  * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
  * @typedef {{description: string, id: number, name: string, pictures: {src: string, description: string}[]}[]} Destinations
  * */
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
 
 export default class PointPresenter {
   #tripListContainer = null;
@@ -75,7 +70,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -92,6 +88,40 @@ export default class PointPresenter {
       this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #replacePointToForm() {
@@ -141,7 +171,6 @@ export default class PointPresenter {
       update
     );
 
-    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {

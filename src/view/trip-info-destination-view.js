@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
-import {DateFormat} from '../const.js';
+import {DateFormat, MAX_SHOW_DESTINATIONS} from '../const.js';
 
 const createTitleTemplate = (points, destinations) => {
   if (points.length === 0) {
@@ -13,7 +13,7 @@ const createTitleTemplate = (points, destinations) => {
 
   const uniqueDestinationNames = Array.from(new Set(destinationNames));
 
-  return uniqueDestinationNames.length <= 3 ?
+  return uniqueDestinationNames.length <= MAX_SHOW_DESTINATIONS ?
     uniqueDestinationNames.join(' — ') :
     `${uniqueDestinationNames[0]} — ... — ${uniqueDestinationNames[uniqueDestinationNames.length - 1]}`;
 };
