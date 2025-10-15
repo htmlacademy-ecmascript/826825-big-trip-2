@@ -23,7 +23,9 @@ export default class NewEventButtonPresenter {
   }
 
   #handleNewPointButtonClick = () => {
-    this.#boardPresenter.createPoint();
+    this.#boardPresenter.createPoint({
+      newEventButtonComponent: this.#newEventButtonComponent.element
+    });
     this.#newEventButtonComponent.element.disabled = true;
   };
 }

@@ -27,7 +27,6 @@ export default class BoardPresenter {
   #sortComponent = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
-  #onNewPointDestroy = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
@@ -37,11 +36,10 @@ export default class BoardPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  constructor({boardContainer, pointsModel, filterModel}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
-    this.#onNewPointDestroy = onNewPointDestroy;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -68,7 +66,7 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
-  createPoint() {
+  createPoint({newEventButtonComponent}) {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter = new NewPointPresenter({
@@ -76,7 +74,7 @@ export default class BoardPresenter {
       destinations: this.#pointsModel.destinations,
       offers: this.#pointsModel.offers,
       onDataChange: this.#handleViewAction,
-      onDestroy: this.#onNewPointDestroy,
+      newEventButtonComponent: newEventButtonComponent,
     });
 
     this.#newPointPresenter.init();

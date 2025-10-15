@@ -14,13 +14,6 @@ const tripHeaderElement = siteHeaderElement.querySelector('.trip-main');
 const pageMainElement = document.querySelector('.page-main');
 const mainContainer = pageMainElement.querySelector('.page-body__container');
 
-const newEventButton = tripHeaderElement.querySelector('.trip-main__event-add-btn');
-function handleNewPointFormClose() {
-  if(newEventButton) {
-    newEventButton.disabled = false;
-  }
-}
-
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
@@ -37,7 +30,6 @@ const boardPresenter = new BoardPresenter({
   boardContainer: mainContainer,
   pointsModel,
   filterModel,
-  onNewPointDestroy: handleNewPointFormClose,
 });
 
 const filterPresenter = new FilterPresenter({

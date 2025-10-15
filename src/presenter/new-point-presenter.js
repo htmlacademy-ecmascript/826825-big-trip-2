@@ -11,9 +11,10 @@ import {UserAction, UpdateType} from '../const.js';
 export default class NewPointPresenter {
   #pointEditComponent = null;
   #tripListContainer = null;
+  #newEventButtonComponent = null;
   /** @type {(point: Point) => void} */
   #handleDataChange;
-  #handleDestroy;
+  // #handleDestroy;
   /** @type {Destinations} */
   #destinations;
   /** @type {Offers} */
@@ -27,12 +28,12 @@ export default class NewPointPresenter {
    * @param {Offers} offers
    * */
 
-  constructor({tripListContainer, onDataChange, onDestroy, destinations, offers}) {
+  constructor({tripListContainer, onDataChange, newEventButtonComponent, destinations, offers}) {
     this.#tripListContainer = tripListContainer;
     this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#newEventButtonComponent = newEventButtonComponent;
   }
 
 
@@ -51,6 +52,10 @@ export default class NewPointPresenter {
 
     render(this.#pointEditComponent, this.#tripListContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #handleDestroy() {
+    this.#newEventButtonComponent.disabled = false;
   }
 
   destroy() {
