@@ -13,9 +13,11 @@ const getDurationTime = (dateFrom, dateTo) => {
   const date2 = dayjs(dateTo);
   const datesDifference = date2.diff(date1);
   const durationObject = dayjs.duration(datesDifference);
+
   if (durationObject.asHours() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_MINUTE_FORMAT);
   }
+
   if (durationObject.asDays() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
@@ -31,7 +33,6 @@ const isEventPresent = (dateFrom, dateTo) => dayjs()
   .isAfter(dateFrom) && dayjs().isBefore(dateTo);
 
 const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
-
 
 export {
   humanizeTaskDueDate,

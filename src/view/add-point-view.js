@@ -4,8 +4,8 @@ import {findOfferByType} from '../utils/events-utils.js';
 import {DateFormat, BLANK_POINT, PointPrice, ValidateText} from '../const.js';
 import flatpickr from 'flatpickr';
 import he from 'he';
-import 'flatpickr/dist/flatpickr.min.css';
 
+import 'flatpickr/dist/flatpickr.min.css';
 
 function createOffersTemplate(offerByType, currentOffers) {
   if (offerByType.length === 0) {
@@ -198,6 +198,7 @@ export default class AddPointView extends AbstractStatefulView {
    * @param {Function} onFormSubmit
    * @param {Function} onCloseButtonClick
    * @param {Function} onDeleteClick
+   * @param {Boolean} isNewPoint
    * */
 
   constructor({point = BLANK_POINT, destinations, offers, onFormSubmit, onCloseButtonClick, onDeleteClick, isNewPoint}) {
@@ -307,7 +308,8 @@ export default class AddPointView extends AbstractStatefulView {
   #offerCurrentHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      offers: [...evt.currentTarget.querySelectorAll('.event__offer-checkbox:checked')].map((item) => item.dataset.offerId),
+      offers: [...evt.currentTarget.querySelectorAll('.event__offer-checkbox:checked')]
+        .map((item) => item.dataset.offerId),
     });
   };
 
@@ -342,18 +344,19 @@ export default class AddPointView extends AbstractStatefulView {
 
     destinationInput.setCustomValidity('');
     if (!destinationOptions.includes(destinationInput.value.trim())) {
-      destinationInput.setCustomValidity(ValidateText.DESTINATIONS_NAME_FALED);
+      destinationInput.setCustomValidity(ValidateText.DESTINATIONS_NAME_FAILED);
       destinationInput.reportValidity();
     }
 
     priceInput.setCustomValidity('');
+
     if (priceInput.value > PointPrice.MAX_POINT_PRICE) {
-      priceInput.setCustomValidity(ValidateText.PRICE_MAX_FALED);
+      priceInput.setCustomValidity(ValidateText.PRICE_MAX_FAILED);
       priceInput.reportValidity();
     }
 
     if (priceInput.value < PointPrice.MIN_POINT_PRICE) {
-      priceInput.setCustomValidity(ValidateText.PRICE_MIN_FALED);
+      priceInput.setCustomValidity(ValidateText.PRICE_MIN_FAILED);
       priceInput.reportValidity();
     }
 
