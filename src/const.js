@@ -1,28 +1,19 @@
-const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const DESTINATION_NAMES = ['Chamonix', 'Amsterdam', 'Duesseldorf', 'London', 'Moenchengladbach', 'Ghotem', 'Liliputia'];
-const MAX_PRICE = 5000;
-const MIN_PRICE = 100;
-const DESCRIPTION = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
-  'Sed sed nisi sed augue convallis suscipit in sed felis.',
-  'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
-  'In rutrum ac purus sit amet tempus.'];
-const POINT_COUNT = 4;
-const MIN_POINT_PRICE = 0;
+const MAX_SHOW_DESTINATIONS = 3;
+
+const PointPrice = {
+  STARTING_POINT_PRICE: 0,
+  MIN_POINT_PRICE: 1,
+  MAX_POINT_PRICE: 100000,
+};
 
 const BLANK_POINT = {
-  basePrice: MIN_POINT_PRICE,
+  basePrice: PointPrice.STARTING_POINT_PRICE,
   dateFrom: null,
   dateTo: null,
   destination: '',
   isFavorite: false,
   offers: [],
-  type: 'Flight',
+  type: 'flight',
 };
 
 const DateFormat = {
@@ -35,7 +26,6 @@ const DateFormat = {
   DATE_DURATION_MINUTE_FORMAT: 'mm[M]',
   DATE_DURATION_HOUR_FORMAT: 'HH[H] mm[M]',
   DATE_DURATION_DAY_FORMAT: 'DD[D] HH[H] mm[M]',
-  DATE_DURATION_MONTH_FORMAT: 'MM[M] DD[D] HH[H] mm[M]'
 };
 
 
@@ -49,7 +39,7 @@ const FilterType = {
 const SortType = {
   DAY: 'day',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
 };
 
 const UserAction = {
@@ -62,21 +52,57 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+  ERROR: 'ERROR',
 };
 
+const NoPointsText = {
+  LOADING: 'Loading...',
+  ERROR_TEXT: 'Failed to load latest route information',
+};
+
+const NoPointsFiltersText = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now',
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+const Url = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
+};
+
+const ValidateText = {
+  PRICE_MAX_FALED: `стоимость не может превышать ${PointPrice.MAX_POINT_PRICE} €` ,
+  PRICE_MIN_FALED: `стоимость не может быть меньше ${PointPrice.MIN_POINT_PRICE} €`,
+  DESTINATIONS_NAME_FALED: 'Выберете путь из предложенного списка',
+};
 
 export {
-  POINT_TYPES,
-  MAX_PRICE,
-  MIN_PRICE,
-  DESCRIPTION,
-  DESTINATION_NAMES,
-  POINT_COUNT,
+  MAX_SHOW_DESTINATIONS,
   DateFormat,
   FilterType,
   SortType,
   UserAction,
   UpdateType,
-  MIN_POINT_PRICE,
+  PointPrice,
   BLANK_POINT,
+  NoPointsText,
+  NoPointsFiltersText,
+  TimeLimit,
+  Mode,
+  Url,
+  ValidateText,
 };

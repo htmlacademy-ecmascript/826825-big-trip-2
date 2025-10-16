@@ -1,24 +1,39 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
-import {nanoid} from 'nanoid';
 import {UserAction, UpdateType} from '../const.js';
 
+/**
+ * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
+ * @typedef {{description: string, id: number, name: string, pictures: {src: string, description: string}[]}[]} Destinations
+ * @typedef {{type: string, id: number, offers: {id: string, title: string, price: number}[]}[]} Offers
+ * */
 
 export default class NewPointPresenter {
-
-  #tripListContainer = null;
-  #handleDataChange = null;
-  #handleDestroy = null;
   #pointEditComponent = null;
-  #destinations = null;
-  #offers = null;
+  #tripListContainer = null;
+  #newEventButtonComponent = null;
+  /** @type {(point: Point) => void} */
+  #handleDataChange;
+  // #handleDestroy;
+  /** @type {Destinations} */
+  #destinations;
+  /** @type {Offers} */
+  #offers;
 
-  constructor({tripListContainer, onDataChange, onDestroy, destinations, offers}) {
+  /**
+   * @param {(point: Point) => void} onDataChange
+   * @param {Function} onDestroy
+   * @param {Function} onModeChange
+   * @param {Destinations} destinations
+   * @param {Offers} offers
+   * */
+
+  constructor({tripListContainer, onDataChange, newEventButtonComponent, destinations, offers}) {
     this.#tripListContainer = tripListContainer;
     this.#handleDataChange = onDataChange;
-    this.#handleDestroy = onDestroy;
     this.#destinations = destinations;
     this.#offers = offers;
+    this.#newEventButtonComponent = newEventButtonComponent;
   }
 
 
@@ -39,6 +54,10 @@ export default class NewPointPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  #handleDestroy() {
+    this.#newEventButtonComponent.disabled = false;
+  }
+
   destroy() {
     if (this.#pointEditComponent === null) {
       return;
@@ -50,14 +69,30 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {
