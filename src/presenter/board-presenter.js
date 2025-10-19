@@ -67,6 +67,8 @@ export default class BoardPresenter {
   }
 
   createPoint({newEventButtonComponent}) {
+    render(this.#tripListComponent, this.#boardComponent.element);
+
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter = new NewPointPresenter({
@@ -76,6 +78,10 @@ export default class BoardPresenter {
       onDataChange: this.#handleViewAction,
       newEventButtonComponent: newEventButtonComponent,
     });
+
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
 
     this.#newPointPresenter.init();
   }
