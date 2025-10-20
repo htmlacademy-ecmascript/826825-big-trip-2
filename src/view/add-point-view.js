@@ -44,7 +44,7 @@ function createDescriptionTemplate(currentDestination) {
     return '';
   }
   const {name, description, pictures} = currentDestination;
-  return !description? '' : (
+  return !description ? '' : (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">${name}</h3>
       ${createTextDescriptionTemplate(description)}
@@ -257,8 +257,7 @@ export default class AddPointView extends AbstractStatefulView {
   #setDatepickerTo() {
     this.#datepickerEnd = flatpickr(
       this.element.querySelector('#event-end-time-1'),
-      { 
-        // minDate: new Date(new Date(this._state.dateFrom).getTime() + 3_600_000).toISOString(),
+      {
         minDate: new Date(this._state.dateFrom),
         dateFormat: 'd/m/y H:i',
         enableTime: true,
@@ -303,15 +302,11 @@ export default class AddPointView extends AbstractStatefulView {
   }
 
   #dateFromChangeHandler = ([userDateFrom]) => {
-    this.updateElement({
-      dateFrom: userDateFrom,
-    });
+    this._setState({dateFrom: userDateFrom});
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
-    this.updateElement({
-      dateTo: userDateTo,
-    });
+    this._setState({dateTo: userDateTo});
   };
 
   #eventTypeToggleHandler = (evt) => {
@@ -320,7 +315,6 @@ export default class AddPointView extends AbstractStatefulView {
     if (!target) {
       return;
     }
-    console.log(target.querySelector('input').dataset.value);
     evt.preventDefault();
     this.updateElement({
       type: target.querySelector('input').dataset.value,

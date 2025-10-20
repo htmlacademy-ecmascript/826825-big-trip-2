@@ -59,7 +59,6 @@ export default class NewPointPresenter {
       return;
     }
 
- 
     this.#handleDestroy();
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
