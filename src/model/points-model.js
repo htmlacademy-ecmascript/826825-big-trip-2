@@ -1,7 +1,6 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
 
-
 export default class PointsModel extends Observable {
   #pointsApiService = null;
   #points = [];
@@ -33,11 +32,13 @@ export default class PointsModel extends Observable {
       this.#points = points.map(this.#adaptToClient);
       this.#offers = offers;
       this.#destinations = destination;
+
       this._notify(UpdateType.INIT);
     } catch(err) {
       this.#points = [];
       this.#destinations = [];
       this.#offers = [];
+
       this._notify(UpdateType.ERROR);
     }
   }
@@ -65,7 +66,6 @@ export default class PointsModel extends Observable {
   }
 
   async addPoint(updateType, update) {
-
     try {
       const response = await this.#pointsApiService.addPoint(update);
       const newPoint = this.#adaptToClient(response);
@@ -77,7 +77,6 @@ export default class PointsModel extends Observable {
   }
 
   async deletePoint(updateType, update) {
-
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -91,7 +90,6 @@ export default class PointsModel extends Observable {
         ...this.#points.slice(index + 1),
       ];
       this._notify(updateType);
-
     } catch(err) {
       throw new Error('Can\'t delete point');
     }
@@ -113,6 +111,7 @@ export default class PointsModel extends Observable {
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];
     delete adaptedPoint['is_favorite'];
+
     return adaptedPoint;
   }
 }
