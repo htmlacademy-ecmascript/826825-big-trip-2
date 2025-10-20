@@ -6,6 +6,7 @@ const PointPrice = {
   MAX_POINT_PRICE: 100000,
 };
 
+/** @type Point */
 const BLANK_POINT = {
   basePrice: PointPrice.STARTING_POINT_PRICE,
   dateFrom: null,
@@ -27,7 +28,6 @@ const DateFormat = {
   DATE_DURATION_HOUR_FORMAT: 'HH[H] mm[M]',
   DATE_DURATION_DAY_FORMAT: 'DD[D] HH[H] mm[M]',
 };
-
 
 const FilterType = {
   EVERYTHING: 'everything',
@@ -85,9 +85,9 @@ const Url = {
 };
 
 const ValidateText = {
-  PRICE_MAX_FALED: `стоимость не может превышать ${PointPrice.MAX_POINT_PRICE} €` ,
-  PRICE_MIN_FALED: `стоимость не может быть меньше ${PointPrice.MIN_POINT_PRICE} €`,
-  DESTINATIONS_NAME_FALED: 'Выберете путь из предложенного списка',
+  PRICE_MAX_FAILED: `стоимость не может превышать ${PointPrice.MAX_POINT_PRICE} €` ,
+  PRICE_MIN_FAILED: `стоимость не может быть меньше ${PointPrice.MIN_POINT_PRICE} €`,
+  DESTINATIONS_NAME_FAILED: 'Выберете путь из предложенного списка',
 };
 
 export {

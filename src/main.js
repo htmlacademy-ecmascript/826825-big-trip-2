@@ -43,10 +43,8 @@ const newEventButtonPresenter = new NewEventButtonPresenter({
   containerElement: tripHeaderElement
 });
 
-
 infoPresenter.init();
 filterPresenter.init();
-
 
 boardPresenter.init();
 pointsModel.init()
