@@ -13,6 +13,8 @@ const getDurationTime = (dateFrom, dateTo) => {
   const date2 = dayjs(dateTo);
   const datesDifference = date2.diff(date1);
   const durationObject = dayjs.duration(datesDifference);
+
+  // const timeDuration = dayjs.duration(dayjs(dateTo).diff(dayjs(dateFrom)));
   if (durationObject.asHours() < 1) {
     return durationObject.format(DateFormat.DATE_DURATION_MINUTE_FORMAT);
   }
@@ -20,7 +22,8 @@ const getDurationTime = (dateFrom, dateTo) => {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
 
-  return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
+  // return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
+  return `${Math.trunc(durationObject.asDays()).toString().padStart(2, '0') }D ${durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT)}`;
 };
 
 const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);
