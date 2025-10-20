@@ -14,7 +14,7 @@ function createTripInfoCostTemplate(points, offers) {
   const costTemplate = createCostTemplate(points, offers);
   return (
     `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${costTemplate}</span>
+      ${points.length !== 0 ? `Total: &euro;&nbsp;<span class="trip-info__cost-value">${costTemplate}</span>` : ''}
     </p>`
   );
 }

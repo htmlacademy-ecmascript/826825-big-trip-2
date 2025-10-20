@@ -22,7 +22,7 @@ const getDurationTime = (dateFrom, dateTo) => {
     return durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT);
   }
 
-  return durationObject.format(DateFormat.DATE_DURATION_DAY_FORMAT);
+  return `${Math.trunc(durationObject.asDays()).toString().padStart(2, '0') }D ${durationObject.format(DateFormat.DATE_DURATION_HOUR_FORMAT)}`;
 };
 
 const isEventExpired = (dueDate) => dayjs().isAfter(dueDate);

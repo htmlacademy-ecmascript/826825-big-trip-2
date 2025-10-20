@@ -27,6 +27,7 @@ export default class BoardPresenter {
   #sortComponent = null;
   #pointPresenters = new Map();
   #newPointPresenter = null;
+  #newEventButtonComponent = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
@@ -67,6 +68,11 @@ export default class BoardPresenter {
   }
 
   createPoint({newEventButtonComponent}) {
+    // this.#currentSortType = SortType.DEFAULT;
+    // this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    render(this.#tripListComponent, this.#boardComponent.element);
+    this.#newEventButtonComponent = newEventButtonComponent;
+
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter = new NewPointPresenter({
@@ -74,8 +80,12 @@ export default class BoardPresenter {
       destinations: this.#pointsModel.destinations,
       offers: this.#pointsModel.offers,
       onDataChange: this.#handleViewAction,
-      newEventButtonComponent: newEventButtonComponent,
+      handleDestroy: this.#handleNewPointFormClose,
     });
+
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
 
     this.#newPointPresenter.init();
   }
@@ -94,6 +104,7 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
+
     render(this.#tripListComponent, this.#boardComponent.element);
     this.points.forEach((point) =>
       this.#renderPoint(point));
@@ -145,6 +156,14 @@ export default class BoardPresenter {
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
   }
+
+  #handleNewPointFormClose = () => {
+    this.#newEventButtonComponent.disabled = false;
+    if (this.points.length === 0) {
+      remove(this.#tripListComponent);
+      this.#renderNoPoints(NoPointsFiltersText[this.#filterType]);
+    }
+  };
 
   #renderLoading() {
     this.#renderNoPoints(NoPointsText.LOADING);
@@ -204,7 +223,7 @@ export default class BoardPresenter {
         this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearBoard();
+        this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
       case UpdateType.MAJOR:
