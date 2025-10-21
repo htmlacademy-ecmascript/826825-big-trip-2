@@ -2,7 +2,6 @@ import {render, replace, remove} from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
 import PointEventView from '../view/point-event-view.js';
 import {UserAction, UpdateType, Mode} from '../const.js';
-import {isDatesEqual} from '../utils/date-utils.js';
 
 /**
  * @typedef {{basePrice: number, dateFrom: number, dateTo: number, destination: number, id: number, isFavorite: boolean, offers: string[], type: string}} Point
@@ -166,13 +165,9 @@ export default class PointPresenter {
    * @param {Point} point
    * */
   #handleFormSubmit = (update) => {
-    const isMinorUpdate =
-      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
-      !isDatesEqual(this.#point.dateTo, update.dateTo);
-
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      UpdateType.PATCH,
       update
     );
 

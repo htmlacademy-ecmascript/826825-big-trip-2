@@ -59,7 +59,6 @@ export default class BoardPresenter {
       case SortType.DAY:
         return filteredPoints.sort(sortPointsByDay);
     }
-
     return filteredPoints;
   }
 
@@ -68,8 +67,6 @@ export default class BoardPresenter {
   }
 
   createPoint({newEventButtonComponent}) {
-    // this.#currentSortType = SortType.DEFAULT;
-    // this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     render(this.#tripListComponent, this.#boardComponent.element);
     this.#newEventButtonComponent = newEventButtonComponent;
 
@@ -227,7 +224,7 @@ export default class BoardPresenter {
         this.#renderBoard();
         break;
       case UpdateType.MAJOR:
-        this.#clearBoard({resetSortType: true});
+        this.#clearBoard();
         this.#renderBoard();
         break;
       case UpdateType.INIT:

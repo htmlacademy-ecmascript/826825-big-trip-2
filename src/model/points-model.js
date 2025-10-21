@@ -1,5 +1,6 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
+import {isDatesEqual} from '../utils/date-utils.js';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
@@ -53,11 +54,18 @@ export default class PointsModel extends Observable {
     try {
       const response = await this.#pointsApiService.updatePoint(update);
       const updatedPoint = this.#adaptToClient(response);
+
+      const isMinorUpdate =
+        !isDatesEqual(this.#points[index].dateFrom, updatedPoint.dateFrom) ||
+        !isDatesEqual(this.#points[index].dateTo, updatedPoint.dateTo);
+
       this.#points = [
         ...this.#points.slice(0, index),
         updatedPoint,
         ...this.#points.slice(index + 1),
       ];
+
+      updateType = isMinorUpdate ? UpdateType.MINOR : updateType;
 
       this._notify(updateType, updatedPoint);
     } catch(err) {

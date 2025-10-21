@@ -8,6 +8,10 @@ import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createOffersTemplate(offerByType, currentOffers) {
+  if (!offerByType) {
+    return;
+  }
+
   const {offers} = offerByType;
   if (offers.length === 0) {
     return '';
@@ -48,7 +52,7 @@ function createDescriptionTemplate(currentDestination) {
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">${name}</h3>
       ${createTextDescriptionTemplate(description)}
-      ${createFotosTemplate(pictures)}
+      ${createPhotosTemplate(pictures)}
     </section>`
   );
 }
@@ -60,7 +64,7 @@ function createTextDescriptionTemplate(description) {
   return `<p class="event__destination-description">${description}</p>`;
 }
 
-function createFotosTemplate(pictures) {
+function createPhotosTemplate(pictures) {
   if (pictures.length === 0) {
     return '';
   }
@@ -258,7 +262,7 @@ export default class AddPointView extends AbstractStatefulView {
     this.#datepickerEnd = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
-        minDate: new Date(this._state.dateFrom),
+        minDate: this._state.dateFrom,
         dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
@@ -303,10 +307,12 @@ export default class AddPointView extends AbstractStatefulView {
 
   #dateFromChangeHandler = ([userDateFrom]) => {
     this._setState({dateFrom: userDateFrom});
+    this.#setDatepickerTo();
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
     this._setState({dateTo: userDateTo});
+    this.#setDatepickerFrom();
   };
 
   #eventTypeToggleHandler = (evt) => {
