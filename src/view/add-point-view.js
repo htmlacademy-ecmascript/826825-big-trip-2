@@ -52,7 +52,7 @@ function createDescriptionTemplate(currentDestination) {
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">${name}</h3>
       ${createTextDescriptionTemplate(description)}
-      ${createFotosTemplate(pictures)}
+      ${createPhotosTemplate(pictures)}
     </section>`
   );
 }
@@ -64,7 +64,7 @@ function createTextDescriptionTemplate(description) {
   return `<p class="event__destination-description">${description}</p>`;
 }
 
-function createFotosTemplate(pictures) {
+function createPhotosTemplate(pictures) {
   if (pictures.length === 0) {
     return '';
   }
