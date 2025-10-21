@@ -8,6 +8,10 @@ import he from 'he';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createOffersTemplate(offerByType, currentOffers) {
+  if (!offerByType) {
+    return;
+  }
+
   const {offers} = offerByType;
   if (offers.length === 0) {
     return '';
@@ -258,7 +262,7 @@ export default class AddPointView extends AbstractStatefulView {
     this.#datepickerEnd = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
-        minDate: new Date(this._state.dateFrom),
+        minDate: this._state.dateFrom,
         dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
@@ -303,10 +307,12 @@ export default class AddPointView extends AbstractStatefulView {
 
   #dateFromChangeHandler = ([userDateFrom]) => {
     this._setState({dateFrom: userDateFrom});
+    this.#setDatepickerTo();
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
     this._setState({dateTo: userDateTo});
+    this.#setDatepickerFrom();
   };
 
   #eventTypeToggleHandler = (evt) => {
