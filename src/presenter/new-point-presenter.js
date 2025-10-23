@@ -14,7 +14,6 @@ export default class NewPointPresenter {
   /** @type {(point: Point) => void} */
   #handleDataChange;
   #handleDestroy;
-  // #handleDestroy;
   /** @type {Destinations} */
   #destinations;
   /** @type {Offers} */

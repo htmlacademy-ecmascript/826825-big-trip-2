@@ -14,7 +14,7 @@ import BoardView from '../view/bord-view.js';
 import TripListView from '../view/trip-list-view.js';
 import SortView from '../view/sort-view.js';
 import NoPointView from '../view/no-point-view.js';
-import PointPresenter from './eventPoint-presenter.js';
+import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 
 export default class BoardPresenter {
