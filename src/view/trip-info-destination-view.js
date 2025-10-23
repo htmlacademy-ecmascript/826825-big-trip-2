@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeTaskDueDate} from '../utils/date-utils.js';
 import {DateFormat, MAX_SHOW_DESTINATIONS} from '../const.js';
+import {sortPointsByDay} from '../utils/events-utils.js';
 
 const createTitleTemplate = (points, destinations) => {
   if (points.length === 0) {
@@ -23,8 +24,7 @@ const createDurationTemplate = (points) => {
     return '';
   }
 
-  const sortedByTimePoints = points.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-
+  const sortedByTimePoints = points.sort(sortPointsByDay);
   const startDate = humanizeTaskDueDate(sortedByTimePoints[0].dateFrom, DateFormat.DATE_TRIPS_FORMAT);
   const endDate = humanizeTaskDueDate(sortedByTimePoints[sortedByTimePoints.length - 1].dateTo, DateFormat.DATE_TRIPS_FORMAT);
 
